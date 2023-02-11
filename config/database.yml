@@ -81,6 +81,4 @@ test:
 #
 production:
   <<: *default
-  database: record_collection_production
-  username: record_collection
-  password: <%= ENV["RECORD_COLLECTION_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
