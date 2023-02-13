@@ -8,7 +8,7 @@
 
 records = Record.create([
 {
-  name: "Help!",
+  title: "Help!",
   image_url: "https://upload.wikimedia.org/wikipedia/en/e/e7/Help%21_%28The_Beatles_album_-_cover_art%29.jpg",
     artists: [
     {
@@ -18,7 +18,7 @@ records = Record.create([
   ]
 }
 {
-  name: "Hounds of Love",
+  title: "Hounds of Love",
   image_url: "https://upload.wikimedia.org/wikipedia/en/3/3f/Katebushhoundsoflove.png",
     artists: [
       {
@@ -28,7 +28,7 @@ records = Record.create([
     ]
 }
 {
-  name: "Jailbreak",
+  title: "Jailbreak",
   image_url: "https://upload.wikimedia.org/wikipedia/en/thumb/3/33/Thin_Lizzy_-_Jailbreak.jpg/220px-Thin_Lizzy_-_Jailbreak.jpg",
     artists: [
       {
@@ -38,7 +38,7 @@ records = Record.create([
     ]
 }
 {
-  name: "Talio",
+  title: "Talio",
   image_url: "https://i.ebayimg.com/images/g/qlgAAOSwaj5iby9f/s-l1600.jpg",
     artist: [
       {
@@ -48,7 +48,7 @@ records = Record.create([
     ]
 }
 {
-  name: "Kind of Blue",
+  title: "Kind of Blue",
   image_url: "https://i.guim.co.uk/img/media/0f5a2d6ea401b7281fc050a8bbd57da6b5e18e5f/0_0_3556_3556/master/3556.jpg?width=700&quality=85&auto=format&fit=max&s=4be63bd5ea4dae601ed124031f90e434",
     artists: [
       {
@@ -58,7 +58,7 @@ records = Record.create([
     ]
 }
 {
-  name: "Heart Shaped World",
+  title: "Heart Shaped World",
   image_url: "https://upload.wikimedia.org/wikipedia/en/4/42/Heart_shaped_world.jpg",
     artists: [
       {
@@ -68,7 +68,7 @@ records = Record.create([
   ]
 }
 {
-  name: "!Volare¡ The Very Best of the Gypsy Kings"
+  title: "!Volare¡ The Very Best of the Gypsy Kings"
   image_url: "https://upload.wikimedia.org/wikipedia/en/6/6c/Album_i_volare_the_very_best.jpg"
     artists: [
       {
