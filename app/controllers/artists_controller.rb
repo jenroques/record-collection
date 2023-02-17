@@ -1,6 +1,4 @@
 class ArtistsController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
-  rescue_from ActiveRecord::RecordInvalid, with: :render_invalid_record
   wrap_parameters :artist, include: [:name, :image_url, :record_ids: []]
 
   def index

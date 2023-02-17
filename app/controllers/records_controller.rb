@@ -1,6 +1,4 @@
 class RecordController < ApplicationController
-  rescue_from ActiveRecord::RecordInvalid, with: :render_invalid_record
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
   skip_before_action :authorize, only: [:show]
   wrap_parameters :record, include: [:title, artist_ids: []]
 
