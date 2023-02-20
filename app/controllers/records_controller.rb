@@ -1,4 +1,4 @@
-class RecordController < ApplicationController
+class RecordsController < ApplicationController
   skip_before_action :authorize, only: [:show]
   wrap_parameters :record, include: [:title, artist_ids: []]
 
