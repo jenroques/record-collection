@@ -1,5 +1,4 @@
-class UserSerializer < ActiveModel::Serializer
-  include ActiveRecord::Associations::ClassMethods
+class UserSerializer < ApplicationSerializer
   attributes :id, :username
 
   has_many :records

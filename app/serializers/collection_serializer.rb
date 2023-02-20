@@ -1,5 +1,4 @@
-class CollectionSerializer < ActiveModel::Serializer
-  include ActiveRecord::Associations::ClassMethods
+class CollectionSerializer < ApplicationSerializer
   attributes :id, :name, :created_at, :updated_at
 
   has_many :records
