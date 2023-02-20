@@ -27,3 +27,4 @@ def user_params
   params.permit(:username, :password_digest)
 end
 
+end

@@ -33,5 +33,5 @@ class CollectionsController < ApplicationController
     params.permit(:name)
   end
 
-
+end
 

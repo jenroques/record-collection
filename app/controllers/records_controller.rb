@@ -37,4 +37,8 @@ class RecordController < ApplicationController
 
   def update_record_params
     params.permit(:title, :image_url, :collection_id)
+  end
+
+end
+
 
