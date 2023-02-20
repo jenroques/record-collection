@@ -1,4 +1,4 @@
 class ApplicationSerializer < ActiveModel::Serializer
   include ActiveRecord::Associations
-  include ActiveRecord::TableName
+  include ActiveRecord::ModelSchema
 end
