@@ -36,4 +36,4 @@ class ArtistsController < ApplicationController
 
   def update_artist_params
     params.permit(:name, :image_url)
-
+  end
