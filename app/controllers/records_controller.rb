@@ -3,25 +3,25 @@ class RecordsController < ApplicationController
   wrap_parameters :record, include: [:title, artist_ids: []]
 
   def index
-    @records = Record.all
-    render json: @records
+    records = Record.all
+    render json: records
   end
 
   def create
-    @record = Record.create(record_params)
-    render json: @record, status: :created
+    record = Record.create(record_params)
+    render json: record, status: :created
   end
 
   def update
-    @record = find_record
-    @record.update(update_record_params)
-    render json: @record, status: :accepted
+    record = find_record
+    record.update(update_record_params)
+    render json: record, status: :accepted
   end
 
   def destroy
-    @record = find_record
-    @record
-    @record.destroy
+    record = find_record
+    record
+    record.destroy
     head :no_content
   end
 

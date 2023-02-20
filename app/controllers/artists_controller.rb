@@ -3,25 +3,25 @@ class ArtistsController < ApplicationController
 
 
   def index
-    @artists = Artist.all
-    render json: @artists
+    artists = Artist.all
+    render json: artists
   end
 
   def create
-    @artist = Artist.create(artist_params)
-    render json: @artist, status: :created
+    artist = Artist.create(artist_params)
+    render json: artist, status: :created
   end
 
   def update
-    @artist = find_artist
-    @artist.update(update_artist_params)
-    render json: @artist, status: :accepted
+    artist = find_artist
+    artist.update(update_artist_params)
+    render json: artist, status: :accepted
   end
 
   def destroy
-    @artist = find_artist
-    @artist
-    @artist.destroy
+    artist = find_artist
+    artist
+    artist.destroy
     head :no_content
   end
 
