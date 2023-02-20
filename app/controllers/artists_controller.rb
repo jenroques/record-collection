@@ -1,5 +1,5 @@
 class ArtistsController < ApplicationController
-  wrap_parameters :artist, include: [:name, :image_url, :record_ids: []]
+  wrap_parameters :artist, include: [:name, :image_url, record_ids: []]
 
   def index
     @artists = Artist.all
