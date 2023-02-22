@@ -23,6 +23,25 @@ class CollectionsController < ApplicationController
     head :no_content
   end
 
+  def add_to_collection
+    collection = find_collection
+    record = Record.find(params[:id])
+    if collection.records.include?(record)
+      render json: { message: 'Record already in collection.' }, status: :unprocessable_entity
+    else
+      collecion.records << record
+      render json: { message: 'Record added to collection' }, status: :ok
+    end
+  end
+
+  def delete_from_collection
+    collection = find_collection
+    record = Record.find(params[:id])
+    collection.records.delete(record)
+    render json: { message: "Record successfully removed from collection"}
+  end
+
+
   private
 
   def find_collection

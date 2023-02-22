@@ -25,6 +25,18 @@ class RecordsController < ApplicationController
     head :no_content
   end
 
+  def add_to_record
+    record = Record.find_record
+    artist = Artist.find(params[:id])
+    if record.artists.include?(artist)
+      render json: { message: 'Artist already exists on record.' }, status: :unprocessable_entity
+    else
+      record.artists << artist
+      render json: { message: 'Artist added to record.'}, status: :ok
+    end
+  end
+
+
   private
 
   def find_record
