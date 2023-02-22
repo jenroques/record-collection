@@ -36,6 +36,12 @@ class RecordsController < ApplicationController
     end
   end
 
+  def delete_from_record
+    record = find_record
+    artist = Artist.find(params[:id])
+    record.artists.delete(artist)
+    render json: { message: "Artist has been removed from the record." }
+  end
 
   private
 
