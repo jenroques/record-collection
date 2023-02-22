@@ -12,8 +12,8 @@ Rails.application.routes.draw do
   post "/addtocollection", to: "collections#add_to_collection"
   delete "/deletefromcollection", "collections#delete_from_collection"
 
-  post '/addtorecord', to: "record#add_to_record"
-  delete '/deletefromrecord', to: "record#delete_from_record"
+  post '/addtorecord', to: "records#add_to_record"
+  delete '/deletefromrecord', to: "records#delete_from_record"
 
   get '*path',
   to: 'fallback#index',
