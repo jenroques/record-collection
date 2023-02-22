@@ -10,10 +10,10 @@ Rails.application.routes.draw do
   get "/me", to: "users#show"
 
   post "/addtocollection", to: "collections#add_to_collection"
-  delete "/deletefromcollection", "collections#delete_from_collection"
+  delete "/deletefromcollection", to: "collections#delete_from_collection"
 
-  post '/addtorecord', to: "records#add_to_record"
-  delete '/deletefromrecord', to: "records#delete_from_record"
+  post "/addtorecord", to: "records#add_to_record"
+  delete "/deletefromrecord", to: "records#delete_from_record"
 
   get '*path',
   to: 'fallback#index',
