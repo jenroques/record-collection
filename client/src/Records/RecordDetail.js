@@ -1,7 +1,9 @@
 import React from 'react'
 
-export const RecordDetail = () => {
+const RecordDetail = () => {
     return (
         <div>RecordDetail</div>
     )
 }
+
+export default RecordDetail

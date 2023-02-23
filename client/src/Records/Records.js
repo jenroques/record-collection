@@ -1,7 +1,9 @@
 import React from 'react'
 
-export const Records = () => {
+const Records = () => {
     return (
         <div>Records</div>
     )
 }
+
+export default Records
