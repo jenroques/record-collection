@@ -1,6 +1,6 @@
 class RecordsController < ApplicationController
-  skip_before_action :authorize, only: [:show]
-  wrap_parameters :record, include: [:title, artist_ids: []]
+  skip_before_action :authorize, only: [:show, :index]
+  wrap_parameters :record, include: [:title, artist_ids: [], artists: [:name]]
 
   def index
     records = Record.all
@@ -26,8 +26,8 @@ class RecordsController < ApplicationController
   end
 
   def add_to_record
-    record = Record.find_record
-    artist = Artist.find(params[:id])
+    record = find_record
+    artist = Artist.find_or_create_by(name: params[:name])
     if record.artists.include?(artist)
       render json: { message: 'Artist already exists on record.' }, status: :unprocessable_entity
     else
@@ -38,7 +38,7 @@ class RecordsController < ApplicationController
 
   def delete_from_record
     record = find_record
-    artist = Artist.find(params[:id])
+    artist = Artist.find(params[:artist_id])
     record.artists.delete(artist)
     render json: { message: "Artist has been removed from the record." }
   end
@@ -50,7 +50,7 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    params.permit(:title, :image_url, :user_id, :collection_id, :artist_id)
+    params.require(:record).permit(:title, :image_url, :user_id, :collection_id, artist_ids: [])
   end
 
   def update_record_params

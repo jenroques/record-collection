@@ -1,5 +1,5 @@
 class ArtistSerializer < ActiveModel::Serializer
-  attributes :id, :name, :image_url, :record_id
+  attributes :id, :name, :image_url
 
   has_many :records
 end
