@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./Utils/store";
 
 import Artists from "./Artists/Artists";
@@ -17,6 +17,11 @@ import Nav from './Utils/Nav';
 
 
 function App() {
+  const collectionId = useSelector(state => state.collection.id);
+  const recordId = useSelector(state => state.records.id);
+
+
+
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -25,9 +30,9 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/artists" component={Artists} />
           <Route exact path="/collections" component={Collections} />
-          <Route exact path={`/collection/${id}`} component={CollectionDetail} />
+          <Route exact path={`/collection/${collectionId}`} component={CollectionDetail} />
           <Route exact path="/records" component={Records} />
-          <Route exact path={`/records/${id}`} component={RecordDetail} />
+          <Route exact path={`/records/${recordId}`} component={RecordDetail} />
           <Route exact path="/me" component={UserProfile} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={Logout} />
