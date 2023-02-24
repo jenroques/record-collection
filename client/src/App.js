@@ -1,13 +1,11 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./Utils/store";
 
 import Artists from "./Artists/Artists";
 import Collections from "./Collections/Collections";
-import CollectionDetail from './Collections/CollectionDetail';
 import Records from './Records/Records';
-import RecordDetail from './Records/RecordDetail';
 import UserProfile from './User/UserProfile';
 import Login from './User/Login';
 import Logout from './User/Logout';
