@@ -8,7 +8,7 @@ const initialState = {
     currentRecord: {},
     currentCollection: {},
     currentUser: null,
-    isLoggedIn: false
+    isLoggedIn: false,
 };
 
 // USERS
@@ -19,8 +19,8 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
     return data
 })
 
-export const fetchUserById = createAsyncThunk("users/fetchUserById", async (userId) => {
-    const response = await fetch(`/users/${userId}`);
+export const fetchUserById = createAsyncThunk("users/fetchUserById", async (id) => {
+    const response = await fetch(`/users/${id}`);
     const data = await response.json();
     return data
 })
@@ -66,15 +66,24 @@ const usersSlice = createSlice({
     name: 'users',
     initialState: [],
     reducers: {
+        setUserId(state, action) {
+            const { id, user } = action.payload;
+            const index = state.findIndex(u => u.id === id);
+            state[index] = { ...user, id };
+        },
         addUser: (state, action) => {
             state.push(action.payload);
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
-            return action.payload;
+            return action.payload.map(user => {
+                const { id, ...rest } = record;
+                return { ...rest, id };
+            })
         });
         builder.addCase(fetchUserById.fulfilled, (state, action) => {
+            const { id } = action.payload;
             const index = state.findIndex((user) => user.id === action.payload.id);
             if (index !== -1) {
                 state[index] = action.payload;
@@ -83,7 +92,8 @@ const usersSlice = createSlice({
             }
         });
         builder.addCase(createUser.fulfilled, (state, action) => {
-            state.push(action.payload);
+            const { id, ...user } = action.payload;
+            state.push({ ...user, id });
         });
         builder.addCase(login.fulfilled, (state, action) => {
             state.currentUser = action.payload;
@@ -122,8 +132,8 @@ export const fetchRecords = createAsyncThunk("records/fetchFecords", async () =>
     return data
 });
 
-export const fetchRecordById = createAsyncThunk("records/fetchRecordById", async (recordId) => {
-    const response = await fetch(`/records/${recordId}`);
+export const fetchRecordById = createAsyncThunk("records/fetchRecordById", async (id) => {
+    const response = await fetch(`/records/${id}`);
     const data = await response.json();
     return data
 })
@@ -152,8 +162,8 @@ export const updateRecord = createAsyncThunk("records/updateRecord", async (reco
     return data;
 })
 
-export const deleteRecord = createAsyncThunk("records/deleteRecord", async (recordId) => {
-    const response = await fetch(`/records/${recordId}`, {
+export const deleteRecord = createAsyncThunk("records/deleteRecord", async (id) => {
+    const response = await fetch(`/records/${id}`, {
         method: "DELETE",
     });
     const data = await response.json()
@@ -164,6 +174,11 @@ const recordsSlice = createSlice({
     name: "records",
     initialState: [],
     reducers: {
+        setRecordId(state, action) {
+            const { id, record } = action.payload;
+            const index = state.findIndex(r => r.id === id);
+            state[index] = { ...record, id };
+        },
         setCurrentRecord: (state, action) => {
             state.currentRecord(action.payload);
         },
@@ -181,7 +196,10 @@ const recordsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchRecords.fulfilled, (state, action) => {
-            return action.payload;
+            return action.payload.map(record => {
+                const { id, ...rest } = record;
+                return { ...rest, id };
+            });
         });
         builder.addCase(fetchRecordById.fulfilled, (state, action) => {
             const { id } = action.payload;
@@ -214,8 +232,8 @@ export const fetchCollections = createAsyncThunk("collections/fetchCollections",
     return data
 })
 
-export const fetchCollectionById = createAsyncThunk("collections/fetchCollectionById", async (collectionId) => {
-    const response = await fetch(`/collections/${collectionId}`);
+export const fetchCollectionById = createAsyncThunk("collections/fetchCollectionById", async (id) => {
+    const response = await fetch(`/collections/${id}`);
     const data = await response.json();
     return data
 })
@@ -244,8 +262,8 @@ export const updateCollection = createAsyncThunk("collections/updateCollection",
     return data;
 })
 
-export const deleteCollection = createAsyncThunk("collections/deleteCollection", async (collectionId) => {
-    const response = await fetch(`/collections/${collectionId}`, {
+export const deleteCollection = createAsyncThunk("collections/deleteCollection", async (id) => {
+    const response = await fetch(`/collections/${id}`, {
         method: "DELETE",
     });
     const data = await response.json()
@@ -279,6 +297,11 @@ const collectionsSlice = createSlice({
     name: "collections",
     initialState,
     reducers: {
+        setCollectionId(state, action) {
+            const { id, collection } = action.payload;
+            const index = state.findIndex(c => c.id === id);
+            state[index] = { ...collection, id };
+        },
         setCurrentCollection: (state, action) => {
             state.currentCollection = action.payload;
         },
@@ -296,7 +319,10 @@ const collectionsSlice = createSlice({
         extraReducers: (builder) => {
             builder
                 .addCase(fetchCollections.fulfilled, (state, action) => {
-                    return action.payload;
+                    return action.payload.map(collection => {
+                        const { id, ...rest } = collection;
+                        return { ...rest, id };
+                    });
                 })
             builder.addCase(fetchCollectionById.fulfilled, (state, action) => {
                 const { id } = action.payload;
@@ -394,6 +420,11 @@ const artistSlice = createSlice({
     name: "artists",
     initialState: [],
     reducers: {
+        setArtistId(state, action) {
+            const { id, artist } = action.payload;
+            const index = state.findIndex(a => a.id === id);
+            state[index] = { ...artist, id };
+        },
         addArtist: (state, action) => {
             state.push(action.payload);
         },
@@ -403,7 +434,10 @@ const artistSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchArtists.fulfilled, (state, action) => {
-            return action.payload;
+            return action.payload.map(artist => {
+                const { id, ...rest } = artist;
+                return { ...rest, id };
+            });
         });
         builder.addCase(fetchCollectionById.fulfilled, (state, action) => {
             const { id } = action.payload;
