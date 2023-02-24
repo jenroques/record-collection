@@ -78,7 +78,7 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
             return action.payload.map(user => {
-                const { id, ...rest } = record;
+                const { id, ...rest } = user;
                 return { ...rest, id };
             })
         });
