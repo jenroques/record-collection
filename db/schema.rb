@@ -24,6 +24,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_11_235609) do
   create_table "artists_records", id: false, force: :cascade do |t|
     t.bigint "record_id", null: false
     t.bigint "artist_id", null: false
+    t.index ["artist_id", "record_id"], name: "index_artists_records_on_artist_id_and_record_id"
+    t.index ["record_id", "artist_id"], name: "index_artists_records_on_record_id_and_artist_id"
   end
 
   create_table "collections", force: :cascade do |t|
