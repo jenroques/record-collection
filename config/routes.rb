@@ -5,9 +5,10 @@ Rails.application.routes.draw do
   resources :records, only: [:index, :show, :create, :update, :destroy]
   resources :collections, only: [:index, :show, :create, :update, :destroy]
   post "/signup", to: "users#create"
+  get "/me", to: "users#show"
+
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
-  get "/me", to: "users#show"
 
   post "/addtocollection", to: "collections#add_to_collection"
   delete "/deletefromcollection", to: "collections#delete_from_collection"

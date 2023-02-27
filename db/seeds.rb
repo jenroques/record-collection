@@ -8,12 +8,12 @@
 
 
 
-User.create([
-  {
-    username: "User",
-    password_digest: "password"
-  }
-])
+# User.create([
+#   {
+#     username: "User",
+#     password_digest: "password"
+#   }
+# ])
 
 Collection.create([
   {
