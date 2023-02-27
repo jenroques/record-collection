@@ -8,7 +8,7 @@ end
 
 def show
   user = User.find(session[:user_id])
-  render json: user
+  render json: { user: user, session_id: session.id }
 end
 
 def create
@@ -24,7 +24,7 @@ def find_user
 end
 
 def user_params
-  params.permit(:username, :password_digest)
+  params.permit(:username, :password, :password_confirmation)
 end
 
 end
