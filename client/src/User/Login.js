@@ -7,12 +7,11 @@ import WarningIcon from '@mui/icons-material/Warning';
 
 import LogoVid from '../Assets/logovid.mp4';
 
-import { login } from '../Utils/store';
+import { login } from '../Action/actions';
 
 export const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -27,19 +26,20 @@ export const Login = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const credentials = { username, password };
-        try {
-            await dispatch(login(credentials)).unwrap();
-            history.push("/welcome");
-            setErrorMessage('');
-            setUsername('');
-            setPassword('');
-        } catch (error) {
-            setErrorMessage('Invalid username or password');
-            console.log("Error:", error);
-        }
+        dispatch(login(credentials))
+            .then(() => {
+                history.push("/welcome");
+                console.log("Successfully logged in")
+                setUsername('');
+                setPassword('');
+            })
+            .catch((error) => {
+                console.log("Error:", error);
+            });
     };
 
-    console.log(props.isLoggedIn)
+
+    console.log("Is Logged in? ", props.isLoggedIn)
 
     return (
         <div style={{ position: 'relative', height: '100vh' }}>
@@ -110,14 +110,14 @@ export const Login = (props) => {
                             >
                                 Don&apos;t have an account?
                             </Typography>
-                            {errorMessage && errorMessage &&
+                            {props.error && props.error &&
                                 <Alert
                                     startDecorator={<WarningIcon sx={{ mx: 0.5 }} />}
                                     variant="outlined"
                                     color="warning"
                                 >
                                     <Typography color="warning" fontWeight="md">
-                                        {errorMessage}
+                                        {props.error}
                                     </Typography>
                                 </Alert>
                             }
