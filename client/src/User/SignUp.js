@@ -6,7 +6,7 @@ import { Alert, Sheet, Typography, FormControl, FormLabel, Input, Button, Link }
 import WarningIcon from '@mui/icons-material/Warning';
 import RecordMini from '../Assets/vinyl.png'
 
-import { createUser } from '../Utils/store'
+import { createUser } from '../Action/actions'
 
 function Copyright(props) {
     return (
