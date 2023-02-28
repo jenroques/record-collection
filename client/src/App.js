@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Artists from "./Artists/Artists";
@@ -10,7 +10,7 @@ import SignUp from './User/SignUp';
 import Login from './User/Login';
 import Home from './Utils/Home';
 import Nav from './Utils/Nav';
-import { authenticate } from "./Utils/store";
+import { authenticate } from "./Action/actions";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,14 +34,20 @@ function App() {
     <BrowserRouter>
       {isLoggedIn && <Nav />}
       <Switch>
-        <Route path="/" exact component={Login} />
-        <Route path="/welcome" exact component={Home} />
-        <Route path="/artists" exact component={Artists} />
-        <Route path="/collections" exact component={Collections} />
-        <Route path="/records" exact component={Records} />
-        <Route path="/me" exact component={UserProfile} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/signup" exact component={SignUp} />
+        <Route exact path="/" component={Login} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={SignUp} />
+        {isLoggedIn ? (
+          <>
+            <Route path="/artists" component={Artists} />
+            <Route path="/collections" component={Collections} />
+            <Route path="/records" component={Records} />
+            <Route path="/me" component={UserProfile} />
+            <Route path="/welcome" component={Home} />
+          </>
+        ) : (
+          <Redirect to="/" />
+        )}
       </Switch>
     </BrowserRouter>
   );
