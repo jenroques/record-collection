@@ -5,11 +5,11 @@ import { AppBar, Box, Button, Container, Menu, MenuItem, Toolbar, Tooltip, Typog
 import IconButton from '@mui/material/IconButton';
 import Logo from '../Assets/logo.png';
 import RecordMini from '../Assets/vinyl.png';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useDispatch } from "react-redux";
-import { logout } from "../Utils/store"
 import { useHistory } from 'react-router-dom';
+
+import { logout } from "../Action/actions"
 
 
 const Nav = () => {
@@ -35,14 +35,10 @@ const Nav = () => {
 
     const settings = [
         { name: "Profile", path: "/me" },
-        { name: "Logout", path: "/logout", onClick: handleLogout }
+        { name: "Logout", path: "/login", onClick: handleLogout }
     ];
 
 
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -60,7 +56,7 @@ const Nav = () => {
         <AppBar position="static" sx={{ backgroundColor: '#c3d6c8' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Link to="/" sx={{ flexGrow: 0 }}>
+                    <Link to="/welcome" sx={{ flexGrow: 0 }}>
                         <img src={Logo} alt="Logo" width="100" height="100" />
                     </Link>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginLeft: '1rem' }}>
