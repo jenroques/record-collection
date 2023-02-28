@@ -43,16 +43,7 @@
       "react-app",
       "react-app/jest"
     ],
-    "rules": {
-      "no-undef": [
-        "error",
-        {
-          "ignore": [
-            "redux-persist/*"
-          ]
-        }
-      ]
-    }
+    "rules": {}
   },
   "browserslist": {
     "production": [
