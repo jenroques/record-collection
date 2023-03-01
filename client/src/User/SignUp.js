@@ -1,35 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom';
-import { CssVarsProvider } from '@mui/joy/styles';
-import { Alert, Sheet, Typography, FormControl, FormLabel, Input, Button, Link } from '@mui/joy';
-import WarningIcon from '@mui/icons-material/Warning';
-import RecordMini from '../Assets/vinyl.png'
+import { Alert, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { createUser } from '../Action/actions'
+import LogoVid from '../Assets/logovid.mp4';
 
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="/">
-                The Record Collector
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { createUser, setIsCreated, clearError } from '../Action/actions';
 
-
+const theme = createTheme();
 
 export const SignUp = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [password_confirmation, setPasswordConfirmation] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [password_confirmation, setPasswordConfirmation] = useState('')
     const history = useHistory();
     const dispatch = useDispatch();
+
+    console.log("error: ", props.error)
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -43,126 +31,152 @@ export const SignUp = (props) => {
         setPasswordConfirmation(e.target.value)
     }
 
-    const handleSubmit = async (e) => {
+    const handleSignUp = (e) => {
         e.preventDefault();
-        const credentials = { username, password };
-        try {
-            await dispatch(createUser(credentials)).unwrap();
-            history.push("/welcome");
-            setErrorMessage('');
-            setUsername('');
-            setPassword('');
-        } catch (error) {
-            setErrorMessage('Does not meet requirements');
-            console.log("Error:", error);
-        }
+        const userData = { username, password, password_confirmation };
+        dispatch(createUser(userData))
+            .then((response) => {
+                if (response.meta.requestStatus === "fulfilled") {
+                    dispatch(setIsCreated(true))
+                    history.push("/login");
+                    console.log("User Created");
+                    setUsername('');
+                    setPassword('');
+                    setPasswordConfirmation('');
+                } else if (response.meta.requestStatus === "rejected") {
+                    console.log("Error:", response.error.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Error:", error);
+            });
     };
 
-    console.log(props.isLoggedIn)
-
     return (
-        <div style={{ position: 'relative', height: '100vh' }}>
-            <CssVarsProvider>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
-                    <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: -2, backgroundColor: '#c3d6c8' }}>
-                    </div>
-                </div>
-                <main style={{ backgroundColor: 'transparent', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div style={{
-                        position: 'absolute', top: '40%', left: '47%', transform: 'translate(-50%, -50%)', width: '300px'
-                    }}>
-                        <Sheet
-                            sx={{
-                                width: 400,
-                                mx: 'auto', // margin left & right
-                                my: 4, // margin top & botom
-                                py: 1, // padding top & bottom
-                                px: 2, // padding left & right
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 2,
-                                borderRadius: 'sm',
-                                boxShadow: 'md',
-                                background: '#F9FDFA',
-                                textAlign: 'center'
-                            }}
-                            variant="outlined"
-                        >
-                            <div>
-                                <Typography level="h4" component="h1">
-                                    <b>Create your account... </b>
-                                </Typography>
-                                <Typography level="body2">...and start collecting!</Typography>
-                            </div>
-                            <FormControl>
-                                <FormLabel>User Name</FormLabel>
-                                <Input
-                                    name="username"
-                                    type="username"
-                                    placeholder="User Name"
-                                    required
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                />
-                            </FormControl>
-                            <FormControl>
-                                <FormLabel>Password</FormLabel>
-                                <Input
-                                    name="password"
-                                    type="password"
-                                    placeholder="password"
-                                    required
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                />
-                            </FormControl>
-                            <FormControl>
-                                <FormLabel>Password</FormLabel>
-                                <Input
-                                    name="password_confirmation"
-                                    type="password"
-                                    placeholder="Confirm Password"
-                                    required
-                                    value={password_confirmation}
-                                    onChange={handlePasswordConfirmationChange}
-                                />
-                            </FormControl>
+        <ThemeProvider theme={theme}>
+            <Grid container component="main" sx={{ height: '100vh', backgroundColor: '#f6f8f9' }}>
+                <CssBaseline />
+                <Grid
+                    item
+                    xs={false}
+                    sm={4}
+                    md={7}
+                >
+                    <Box
+                        sx={{
+                            mt: 20,
+                            ml: 20,
 
-                            <Button sx={{ mt: 1, backgroundColor: '#c3d6c8', color: 'black' }} onClick={handleSubmit}> Log in </Button>
-                            <Typography
-                                endDecorator={<Link href="/login" sx={{ color: "#606761" }}>Log In</Link>}
-                                fontSize="sm"
-                                sx={{ alignSelf: 'center' }}
+                        }}
+                    >
+                        <video
+                            autoPlay
+                            muted
+                            style={{
+                                position: 'absolute',
+                                left: '0',
+                                minWidth: '30%',
+                                minHeight: '30%',
+                                width: '60%',
+                                height: '60%',
+                                zIndex: '0',
+                            }}
+                        >
+                            <source src={LogoVid} type="video/mp4" />
+                        </video>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            mt: 40,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography component="h1" variant="h4">
+                            Welcome Record Collector
+                        </Typography>
+                        <Typography component="h2" variant="h5">
+                            Sign Up and Start Collecting
+                        </Typography>
+                        <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 1, mr: 15, ml: 15 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoFocus
+                                onChange={handleUsernameChange}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                onChange={handlePasswordChange}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password_confirmation"
+                                label="Confirm Password"
+                                type="password"
+                                id="password_confirmation"
+                                onChange={handlePasswordConfirmationChange}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2, color: 'black', backgroundColor: '#c3d6c8' }}
                             >
-                                Already have an account?
-                            </Typography>
-                            {errorMessage && errorMessage &&
+                                Sign Up
+                            </Button>
+                            <Grid container>
+
+                                <Grid item>
+                                    <Link href="/login" variant="body2">
+                                        {"Already have an account? Excellent, log in!"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                            {props.error &&
                                 <Alert
-                                    startDecorator={<WarningIcon sx={{ mx: 0.5 }} />}
                                     variant="outlined"
                                     color="warning"
                                 >
                                     <Typography color="warning" fontWeight="md">
-                                        {errorMessage}
+                                        {props.error}
                                     </Typography>
                                 </Alert>
                             }
-                        </Sheet>
-
-                    </div>
-                </main>
-            </CssVarsProvider>
-        </div >
+                        </Box>
+                    </Box>
+                </Grid>
+            </Grid>
+        </ThemeProvider >
     );
 }
 
 const mapStateToProps = (state) => ({
-    error: state.session.error,
-    isLoggedIn: state.session.isLoggedIn
+    error: state.user.error,
+    isCreated: state.user.isCreated,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    createUser: (credentials) => dispatch(createUser(credentials)),
+    createUser: (userData) => dispatch(createUser(userData)),
+    setIsCreated: () => dispatch(setIsCreated()),
+    clearError: () => dispatch(clearError()),
 });
 
 
