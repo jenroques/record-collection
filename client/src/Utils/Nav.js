@@ -1,15 +1,15 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { AppBar, Box, Button, Container, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Logo from '../Assets/logo.png';
 import RecordMini from '../Assets/vinyl.png';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
-import { logout } from "../Action/actions"
+import { logout, setIsCreated } from "../Action/actions"
 
 
 const Nav = () => {
@@ -23,6 +23,7 @@ const Nav = () => {
         console.log("Trying to logout")
         dispatch(logout())
             .then(() => {
+                dispatch(setIsCreated(false))
                 history.push('/login');
             });
     }
@@ -53,11 +54,11 @@ const Nav = () => {
 
 
     return (
-        <AppBar position="static" sx={{ backgroundColor: '#c3d6c8' }}>
+        <AppBar position="static" sx={{ backgroundColor: '#f6f8f9' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Link to="/welcome" sx={{ flexGrow: 0 }}>
-                        <img src={Logo} alt="Logo" width="100" height="100" />
+                        <img src={Logo} alt="Logo" width="125" height="100" />
                     </Link>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginLeft: '1rem' }}>
                         {pages.map((page) => (
@@ -125,6 +126,14 @@ const Nav = () => {
     );
 }
 
-export default Nav;
+const mapStateToProps = (state) => ({
+    isCreated: state.user.isCreated,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    setIsCreated: () => dispatch(setIsCreated())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
 
 
