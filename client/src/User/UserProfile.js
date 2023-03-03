@@ -1,8 +1,12 @@
 import React from 'react'
+import SideNav from '../Utils/SideNav'
 
 const UserProfile = () => {
     return (
-        <div>UserProfile</div>
+        <>
+            <SideNav />
+            <div>UserProfile</div>
+        </>
     )
 }
 
