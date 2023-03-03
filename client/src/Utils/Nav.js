@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { AppBar, Box, Button, Container, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Logo from '../Assets/logo.png';
-import RecordMini from '../Assets/vinyl.png';
 import MenuIcon from '@mui/icons-material/Menu';
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
@@ -57,16 +56,28 @@ const Nav = () => {
         <AppBar position="static" sx={{ backgroundColor: '#f6f8f9' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Link to="/welcome" sx={{ flexGrow: 0 }}>
-                        <img src={Logo} alt="Logo" width="125" height="100" />
+                    <Link to="/welcome" sx={{
+                        position: 'fixed',
+                        top: '20px',
+                        left: '20px',
+                        zIndex: 9999,
+                    }}>
+                        <img src={Logo} alt="Logo" width="125" height="100" style={{ position: 'sticky', top: '20px', left: '-30rem' }} />
                     </Link>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginLeft: '1rem' }}>
+                    <Box sx={{
+                        position: 'sticky',
+                        display: { xs: 'none', md: 'flex' },
+                        top: '20px',
+                        left: '60px',
+                        right: '20px',
+
+                    }}>
                         {pages.map((page) => (
                             <Button
                                 key={page.name}
                                 onClick={handleCloseNavMenu}
                                 size="large"
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ my: 2, color: 'black', display: 'sticky' }}
                                 component={Link}
                                 to={page.path}
                             >
@@ -77,10 +88,8 @@ const Nav = () => {
 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton onClick={handleOpenUserMenu} style={{ position: 'sticky', marginLeft: '55rem' }}>
                                 <MenuIcon fontSize="large" />
-                                <img src={RecordMini} alt="Vinyl Icon" style={{ width: '40px', height: '40px' }} />
-
                             </IconButton>
                         </Tooltip>
                         <Menu
