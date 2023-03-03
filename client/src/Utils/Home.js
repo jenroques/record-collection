@@ -1,16 +1,30 @@
 import React, { useEffect } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Toolbar, Paper, Grid, Container, Typography } from '@mui/material';
 
-import { SideNav } from './SideNav';
+import SideNav from './SideNav';
+import { fetchRecords, fetchCollections, fetchArtists } from '../Action/actions';
 
 const theme = createTheme();
 
 
-export const Home = (props) => {
-    console.log("ET Phone Home?")
+export const Home = () => {
+    const dispatch = useDispatch();
+    const records = useSelector((state) => state.records.records);
+    const collections = useSelector((state) => state.collections.collections);
+    const artists = useSelector((state) => state.artists.artists);
+    const totalRecords = records.length;
 
+    useEffect(() => {
+        dispatch(fetchRecords());
+    }, [dispatch]);
+
+    console.log(records)
+    console.log(collections)
+    console.log(artists)
+    console.log("ET Phone Home?")
+    console.log(totalRecords)
 
     return (
         <ThemeProvider theme={theme}>
@@ -42,6 +56,7 @@ export const Home = (props) => {
                                     }}
                                 >
                                     <Typography> Record Stats </Typography>
+                                    <Typography>Your current total of records: {totalRecords} </Typography>
                                 </Paper>
                             </Grid>
                             {/* Recent Deposits */}
