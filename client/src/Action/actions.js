@@ -1,12 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createBrowserHistory } from 'history'
 
-const history = createBrowserHistory();
+// UTILITY FUNCTIONS
 
-export const goToPage = (path) => {
-    // navigate to the specified path
-    history.push(path);
-};
+export const setLoggedIn = (isLoggedIn) => ({
+    type: "SET_LOGGED_IN",
+    payload: isLoggedIn,
+});
+
+export const setIsCreated = (value) => ({
+    type: "user/setIsCreated",
+    payload: value,
+});
+
+export const clearError = (value) => ({
+    type: 'CLEAR_ERROR',
+    payload: value,
+});
 
 // CREATE SESSION FOR LOGIN
 
@@ -43,9 +52,6 @@ export const logout = createAsyncThunk(
             throw new Error('Failed to logout');
         }
         localStorage.removeItem('sessionId');
-        // Redirect to the login page
-        dispatch(goToPage('/login'));
-
         return null;
     });
 
@@ -102,6 +108,12 @@ export const createUser = createAsyncThunk(
             },
             body: JSON.stringify(userData),
         });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return Promise.reject(new Error(error.error[0]));
+        }
+
         const data = await response.json();
         return data;
     }
@@ -264,7 +276,7 @@ export const deleteRecordFromCollection = createAsyncThunk(
 export const fetchArtists = createAsyncThunk(
     "artists/fetchArtists",
     async () => {
-        const response = await fetch("/collections");
+        const response = await fetch("/artists");
         const data = await response.json();
         return data;
     }
@@ -288,6 +300,21 @@ export const createArtist = createAsyncThunk(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(artistData),
+        });
+        const data = await response.json();
+        return data;
+    }
+);
+
+export const editArtist = createAsyncThunk(
+    "artists/editArtist",
+    async ({ id, name, image_url }) => {
+        const response = await fetch(`/artists/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, image_url }),
         });
         const data = await response.json();
         return data;
