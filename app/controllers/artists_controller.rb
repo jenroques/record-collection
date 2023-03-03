@@ -15,7 +15,7 @@ class ArtistsController < ApplicationController
 
   def update
     artist = find_artist
-    artist.update(update_artist_params)
+    artist.update(artist_params)
     render json: artist, status: :accepted
   end
 
@@ -33,11 +33,8 @@ class ArtistsController < ApplicationController
   end
 
   def artist_params
-    params.require(:artist).permit(:name, :image_url, record_ids: [])
+    params.permit(:id, :name, :image_url, :artist, record_ids: [])
   end
 
-  def update_artist_params
-    params.permit(:name, :image_url)
-  end
 
 end
