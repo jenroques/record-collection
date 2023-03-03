@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUsers, fetchUserById, createUser } from "../Action/actions"
+import { fetchUsers, fetchUserById, createUser, setIsCreated, clearError } from "../Action/actions"
 
 export const initialState = {
     users: [],
+    currentUser: null,
+    isLoggedIn: false,
+    error: null,
+    isCreated: false,
 };
 
 export const userSlice = createSlice({
-    name: "users",
+    name: "user",
     initialState,
     reducers: {
         setUserId(state, action) {
@@ -16,6 +20,9 @@ export const userSlice = createSlice({
         },
         addUser: (state, action) => {
             state.push(action.payload);
+        },
+        setIsCreated: (state, action) => {
+            state.isCreated = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -35,11 +42,26 @@ export const userSlice = createSlice({
             }
         });
         builder.addCase(createUser.fulfilled, (state, action) => {
-            const { id, ...user } = action.payload;
-            state.push({ ...user, id });
+            const { ...user } = action.payload;
+            state.users.push(user); // Add new user to the users array
+            state.currentUser = action.payload;
+            state.isCreated = true;
+            state.error = null; // Clear any previous error messages
+            console.log("Create User Action a Go")
+            console.log("Is Logged in ", state.isLoggedIn)
+            console.log(state.currentUser)
         });
+        builder.addCase(createUser.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoggedIn = false;
+            console.log("Create User failed with error:", action.error.message);
+        });
+        builder.addCase(clearError, (state) => {
+            state.error = null
+            console.log("Is this being called?")
+        })
     },
 });
 
-
+export { fetchUsers, fetchUserById, createUser, setIsCreated }
 export default userSlice.reducer

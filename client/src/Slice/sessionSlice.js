@@ -1,24 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, logout, authenticate } from "../Action/actions"
+import { login, logout, authenticate, setIsCreated, clearError } from "../Action/actions"
+import { initialState as userInitialState } from "./userSlice";
 
 export const initialState = {
     currentUser: null,
     isLoggedIn: false,
     error: null,
     sessionId: localStorage.getItem("sessionId") || null,
+    ...userInitialState,
+
 }
 
 export const sessionSlice = createSlice({
     name: "session",
     initialState,
-    reducers: {},
+    reducers: {
+        clearError: (state) => {
+            state.error = null;
+            console.log("Error cleared");
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
             state.currentUser = action.payload;
             state.sessionId = action.payload.session_id;
             state.isLoggedIn = true;
+            state.isCreated = false;
+            state.error = null
+            console.log("Is created?", state.isCreated)
             console.log(state.currentUser);
-            console.log(state.isLoggedIn);
+            console.log("Is Logged In?", state.isLoggedIn);
         });
         builder.addCase(login.rejected, (state, action) => {
             state.error = action.error.message;
@@ -29,8 +40,10 @@ export const sessionSlice = createSlice({
             state.currentUser = null;
             state.isLoggedIn = false;
             state.sessionId = null;
+            state.setIsCreated = false;
             console.log("Logged in? ", state.isLoggedIn)
-            console.log("Sessoon id: ", state.sessionId)
+            console.log("Session id: ", state.sessionId)
+            console.log("Logout Success")
         });
         builder.addCase(authenticate.fulfilled, (state, action) => {
             state.currentUser = action.payload.user;
@@ -46,5 +59,5 @@ export const sessionSlice = createSlice({
     },
 });
 
-export { login, logout, authenticate };
+export { login, logout, authenticate, setIsCreated, clearError };
 export default sessionSlice.reducer;

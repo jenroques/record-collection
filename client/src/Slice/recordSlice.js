@@ -32,10 +32,13 @@ export const recordSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchRecords.fulfilled, (state, action) => {
-            return action.payload.map((record) => {
+            console.log('fetchRecords.fulfilled:', action.payload);
+            const records = action.payload.map((record) => {
                 const { id, ...rest } = record;
                 return { ...rest, id };
             });
+            console.log('records:', records);
+            return { ...state, records };
         });
         builder.addCase(fetchRecordById.fulfilled, (state, action) => {
             const { id } = action.payload;
