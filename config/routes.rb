@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :users, only: [:index, :show, :create]
+  resources :users, only: [:index, :show, :create, :update]
   resources :artists, only: [:index, :show, :create, :update, :destroy]
   resources :records, only: [:index, :show, :create, :update, :destroy]
   resources :collections, only: [:index, :show, :create, :update, :destroy]
