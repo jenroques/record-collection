@@ -1,14 +1,15 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
-import { Link, useHistory } from "react-router-dom";
-import { connect, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useDispatch } from 'react-redux'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Box, Button, Toolbar, List, Divider, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { CssBaseline, Box, Tooltip, Toolbar, List, Divider, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import CloseIcon from '@mui/icons-material/Close';
 import MuiDrawer from '@mui/material/Drawer';
 import RecordMini from '../Assets/vinyl.png';
 
@@ -48,39 +49,27 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const theme = createTheme();
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
-
 const UtilityDialog = (props) => {
-    const { open, handleClose, dialogContent } = props;
-
-
+    const { open, onClose, dialogContent, title } = props;
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Subscribe</DialogTitle>
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 {dialogContent}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose}>Submit</Button>
+                <Tooltip title="Cancel">
+                    <IconButton onClick={onClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </Tooltip>
             </DialogActions>
         </Dialog>
     );
 };
 
-const SideNav = () => {
+const SideNav = ({ setIsEdited, isEdited, currentUser }) => {
+    const location = useLocation();
     const dispatch = useDispatch();
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -153,24 +142,36 @@ const SideNav = () => {
                     </Toolbar>
                     <Divider />
                     <List component="nav" sx={{ mt: 4 }}>
-                        <IconButton onClick={handleOpenAddRecord}>
-                            <img src={RecordMini} alt="Vinyl Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
-                            <Typography variant="button" sx={{ ml: 3 }}>Add Record</Typography>
-                        </IconButton>
-                        <UtilityDialog open={openAddRecord} onClose={handleCloseAddRecord} dialogContent={<AddRecord />} />
-                        <Divider sx={{ my: 1 }} />
-                        <IconButton onClick={handleOpenAddArtist}>
-                            <PersonAddIcon alt="Artist Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
-                            <Typography variant="button" sx={{ ml: 3 }}>Add Artist</Typography>
-                        </IconButton>
-                        <UtilityDialog open={openAddArtist} onClose={handleCloseAddArtist} dialogContent={<AddArtist />} />
-                        <Divider sx={{ my: 1 }} />
-                        <IconButton onClick={handleOpenAddCollection}>
-                            <LibraryMusicIcon alt="Vinyl Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
-                            <Typography variant="button" sx={{ ml: 3 }}>Add Record</Typography>
-                        </IconButton>
-                        <UtilityDialog open={openAddCollection} onClose={handleCloseAddCollection} dialogContent={<CreateCollection />} />
-                        <Divider sx={{ my: 1 }} />
+                        {location.pathname === "/records" && (
+                            <>
+                                <IconButton onClick={handleOpenAddRecord}>
+                                    <img src={RecordMini} alt="Vinyl Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
+                                    <Typography variant="button" sx={{ ml: 3 }}>Add Record</Typography>
+                                </IconButton>
+                                <UtilityDialog open={openAddRecord} onClose={handleCloseAddRecord} dialogContent={<AddRecord handleCloseAddRecord={handleCloseAddRecord} setIsEdited={setIsEdited} isEdited={isEdited} currentUser={currentUser} />} title="Add Record" />
+                                <Divider sx={{ my: 1 }} />
+                            </>
+                        )}
+                        {location.pathname === "/artists" && (
+                            <>
+                                <IconButton onClick={handleOpenAddArtist}>
+                                    <PersonAddIcon alt="Artist Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
+                                    <Typography variant="button" sx={{ ml: 3 }}>Add Artist</Typography>
+                                </IconButton>
+                                <UtilityDialog open={openAddArtist} onClose={handleCloseAddArtist} dialogContent={<AddArtist handleCloseAddArtist={handleCloseAddArtist} setIsEdited={setIsEdited} isEdited={isEdited} />} title="Add Artist" />
+                                <Divider sx={{ my: 1 }} />
+                            </>
+                        )}
+                        {location.pathname === "/collections" && (
+                            <>
+                                <IconButton onClick={handleOpenAddCollection}>
+                                    <LibraryMusicIcon alt="Vinyl Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
+                                    <Typography variant="button" sx={{ ml: 3 }}>Create Collection</Typography>
+                                </IconButton>
+                                <UtilityDialog open={openAddCollection} onClose={handleCloseAddCollection} dialogContent={<CreateCollection setIsEdited={setIsEdited} isEdited={isEdited} handleCloseAddCollection={handleCloseAddCollection} />} title="Create Collection" />
+                                <Divider sx={{ my: 1 }} />
+                            </>
+                        )}
                     </List>
                     <List component="nav" sx={{ mt: 14 }}>
                         <Divider sx={{ my: 1 }} />
