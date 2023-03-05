@@ -97,7 +97,7 @@ export const Login = (props) => {
                             Welcome Record Collector
                         </Typography>
                         <Typography component="h2" variant="h5">
-                            Sign in to your Collection:
+                            Sign in to start sharing collections:
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
