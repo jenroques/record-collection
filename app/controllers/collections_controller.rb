@@ -5,6 +5,11 @@ class CollectionsController < ApplicationController
     render json: collections
   end
 
+  def show
+    collection = find_collection
+    render json: collection
+  end
+
   def create
     collection = Collection.create(collection_params)
     render json: collection ,status: :created
