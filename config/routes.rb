@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :artists, only: [:index, :show, :create, :update, :destroy]
   resources :records, only: [:index, :show, :create, :update, :destroy]
   resources :collections, only: [:index, :show, :create, :update, :destroy]
+
   post "/signup", to: "users#create"
   get "/me", to: "users#show"
 
