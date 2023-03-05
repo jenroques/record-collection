@@ -4,7 +4,7 @@ import { fetchCollections, fetchCollectionById, editCollection, deleteCollection
 
 export const initialState = {
     collections: [],
-    currentCollection: {},
+    currentCollection: [],
 };
 
 export const collectionSlice = createSlice({
@@ -52,15 +52,7 @@ export const collectionSlice = createSlice({
             return { ...state, collections }
         });
         builder.addCase(fetchCollectionById.fulfilled, (state, action) => {
-            const { id } = action.payload;
-            const index = state.collections.findIndex(
-                (collection) => collection.id === id
-            );
-            if (index !== -1) {
-                state.collections[index] = action.payload;
-            } else {
-                state.collections.push(action.payload);
-            }
+            state.currentCollection = action.payload;
         });
     },
 });
