@@ -3,7 +3,7 @@ import { fetchRecords, fetchRecordById, createRecord, updateRecord, deleteRecord
 
 export const initialState = {
     records: [],
-    currentRecord: {},
+    currentRecord: [],
 }
 
 export const recordSlice = createSlice({
@@ -49,13 +49,7 @@ export const recordSlice = createSlice({
             return { ...state, records };
         });
         builder.addCase(fetchRecordById.fulfilled, (state, action) => {
-            const { id } = action.payload;
-            const index = state.findIndex((record) => record.id === id);
-            if (index !== -1) {
-                state[index] = action.payload;
-            } else {
-                state.push(action.payload);
-            }
+            state.currentRecord = action.payload;
         });
         builder.addCase(createRecord.fulfilled, (state, action) => {
             console.log("createRecord.fulfilled:", action.payload);
