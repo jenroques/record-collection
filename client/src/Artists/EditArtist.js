@@ -6,8 +6,8 @@ import { editArtist } from '../Action/actions'
 
 export const EditArtist = ({ artist, handleClose, isEdited, setIsEdited }) => {
     const dispatch = useDispatch();
-    const [name, setName] = useState(artist.name)
-    const [imageUrl, setImageUrl] = useState(artist.image_url)
+    const [name, setName] = useState(artist ? artist.name : '')
+    const [imageUrl, setImageUrl] = useState(artist ? artist.image_url : '')
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -27,8 +27,6 @@ export const EditArtist = ({ artist, handleClose, isEdited, setIsEdited }) => {
             console.log(error);
         }
     };
-
-    console.log(artist.id)
 
     return (
         <div>
@@ -73,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    onEdit: (artist) => dispatch(editArtist(artist)),
+    editArtist: (artist) => dispatch(editArtist(artist)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditArtist);
