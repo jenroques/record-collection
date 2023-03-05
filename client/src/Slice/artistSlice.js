@@ -23,16 +23,19 @@ export const artistSlice = createSlice({
         deleteArtist: (state, action) => {
             return {
                 ...state,
-                artists: state.artists.filter((collection) => collection.id !== action.payload.id),
+                artists: state.artists.filter((artist) => artist.id !== action.payload.id),
             };
         },
         editArtist: (state, action) => {
             const updatedArtist = action.payload;
             const index = state.artists.findIndex((artist) => artist.id === updatedArtist.id);
             if (index !== -1) {
-                state.artists[index] = updatedArtist
+                state.artists = [
+                    ...state.artists.slice(0, index),
+                    updatedArtist,
+                    ...state.artists.slice(index + 1),
+                ];
             }
-            return state;
         },
     },
     extraReducers: (builder) => {
@@ -53,13 +56,6 @@ export const artistSlice = createSlice({
             } else {
                 state.artists.push(action.payload);
             }
-        });
-        builder.addCase(deleteArtist.fulfilled, (state, action) => {
-            const artistId = action.payload.id;
-            return {
-                ...state,
-                artists: state.artists.filter((a) => a.id !== artistId),
-            };
         });
         builder.addCase(deleteArtistFromRecord.fulfilled, (state, action) => {
             const artistId = action.payload.id;
