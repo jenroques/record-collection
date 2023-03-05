@@ -85,6 +85,9 @@ export const authenticate = createAsyncThunk(
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
     const response = await fetch("/users");
+    if (!response.ok) {
+        throw new Error("Failed to fetch users");
+    }
     const data = await response.json();
     return data;
 });
@@ -141,29 +144,35 @@ export const fetchRecordById = createAsyncThunk(
 
 export const createRecord = createAsyncThunk(
     "records/createRecord",
-    async (recordData) => {
-        const response = await fetch("/records", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(recordData),
-        });
-        const data = await response.json();
-        return data;
+    async ({ title, image_url, user_id }) => {
+        try {
+            const response = await fetch("/records", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ title, image_url, user_id }),
+            });
+            const data = await response.json();
+            console.log("createRecord response:", data);
+            return data;
+        } catch (error) {
+            console.error("Error creating record:", error);
+            throw error;
+        }
     }
 );
 
 
-export const updateRecord = createAsyncThunk(
-    "records/updateRecord",
-    async (recordData) => {
-        const response = await fetch(`/records/${recordData.id}`, {
+export const editRecord = createAsyncThunk(
+    "records/editRecord",
+    async ({ id, title, image_url }) => {
+        const response = await fetch(`/records/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(recordData),
+            body: JSON.stringify({ id, title, image_url }),
         });
         const data = await response.json();
         return data;
@@ -203,20 +212,20 @@ export const fetchCollectionById = createAsyncThunk(
 
 export const createCollection = createAsyncThunk(
     "collections/createCollection",
-    async (collectionData) => {
+    async ({ name, user_id }) => {
         const response = await fetch("/collections", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(collectionData),
+            body: JSON.stringify({ name, user_id }),
         });
         const data = await response.json();
         return data;
     }
 );
 
-export const updateCollection = createAsyncThunk(
+export const editCollection = createAsyncThunk(
     "collections/updateCollection",
     async (collectionData) => {
         const response = await fetch(`/collections/${collectionData.id}`, {
@@ -301,8 +310,8 @@ export const createArtist = createAsyncThunk(
             },
             body: JSON.stringify(artistData),
         });
-        const data = await response.json();
-        return data;
+        const artist = await response.json();
+        return artist;
     }
 );
 
@@ -334,13 +343,16 @@ export const deleteArtist = createAsyncThunk(
 
 export const addArtistToRecord = createAsyncThunk(
     "records/addArtistToRecord",
-    async ({ recordId, artistId }) => {
-        const response = await fetch("/addtorecord", {
+    async ({ recordId, artistName }) => {
+        const response = await fetch('/addtorecord', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ record_id: recordId, artist_id: artistId }),
+            body: JSON.stringify({
+                record_id: recordId,
+                name: artistName,
+            }),
         });
         const data = await response.json();
         return data;
