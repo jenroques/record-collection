@@ -13,7 +13,7 @@ import {
     Typography
 } from "@mui/material";
 
-const RecordArtist = ({ handleClose, isEdited, setIsEdited, recordId }) => {
+export const RecordArtist = ({ handleClose, isEdited, setIsEdited, recordId }) => {
     const dispatch = useDispatch();
     const [artistName, setArtistName] = useState("");
     const artists = useSelector((state) => state.artists.artists);
