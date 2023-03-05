@@ -1,5 +1,5 @@
 class RecordsController < ApplicationController
-  skip_before_action :authorize, only: [:show, :index, :create]
+  skip_before_action :authorize, only: [:show, :index, :create, :add_to_record]
   wrap_parameters :record, include: [:title, artist_ids: [], artists: [:name]]
 
   def index
@@ -20,19 +20,17 @@ class RecordsController < ApplicationController
 
   def destroy
     record = find_record
-    record
     record.destroy
     head :no_content
   end
 
   def add_to_record
     record = find_record
-    artist = Artist.find_or_create_by(name: params[:name])
-    if record.artists.include?(artist)
-      render json: { message: 'Artist already exists on record.' }, status: :unprocessable_entity
+    record.artists << Artist.find_by(name: params[:name])
+    if record.save
+      render json: record
     else
-      record.artists << artist
-      render json: { message: 'Artist added to record.'}, status: :ok
+      render json: { error: "Failed to add artist to record" }, status: :unprocessable_entity
     end
   end
 
@@ -50,11 +48,11 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    params.permit(:title, :image_url, :user_id, :collection_id, artist_ids: [])
+    params.require(:record).permit(:title, :image_url, :user_id, :collection_id)
   end
 
   def update_record_params
-    params.permit(:title, :image_url, :collection_id)
+    params.permit(:title, :image_url)
   end
 
 end
