@@ -1,37 +1,75 @@
 import React, { useEffect, useState } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Button, IconButton, CardActions, CardMedia, Card, CardContent, InputAdornment, CssBaseline, Box, Toolbar, Paper, Grid, Container, Typography, TextField } from '@mui/material';
-import { fetchRecords } from '../Action/actions';
+import { Button, CardActions, CardMedia, Card, CardContent, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, InputAdornment, IconButton, Tooltip, CssBaseline, Box, Grid, Container, Typography, TextField } from '@mui/material';
+import { fetchRecords, deleteRecord } from '../Action/actions';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SideNav from '../Utils/SideNav';
-import Search from '@mui/icons-material/Search';
+import EditRecord from '../Records/EditRecord';
+import RecordArtist from '../Records/RecordArtist';
 
 const theme = createTheme();
 
-
-
-export const Records = (props) => {
+export const Records = () => {
     const dispatch = useDispatch();
     const records = useSelector((state) => state.records.records);
+    const currentUser = useSelector((state) => state.session.currentUser);
+    const [isEdited, setIsEdited] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [editRecordId, setEditRecordId] = useState(null);
 
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         dispatch(fetchRecords());
-    }, [dispatch]);
+    }, [dispatch, isEdited]);
+
+    const handleEditOpen = (recordId) => {
+        setEditOpen(true);
+        setEditRecordId(recordId);
+    };
+
+    const handleAddOpen = (recordId) => {
+        setAddOpen(true);
+        setEditRecordId(recordId);
+    };
+
+    const handleDeleteOpen = (recordId) => {
+        setDeleteOpen(true);
+        setEditRecordId(recordId);
+    };
+
+    const handleClose = () => {
+        setEditOpen(false);
+        setDeleteOpen(false);
+        setAddOpen(false);
+        setIsEdited(!isEdited)
+    };
+
+    const handleDelete = (record) => {
+        dispatch(deleteRecord(record.id));
+        setIsEdited(!isEdited);
+        handleClose();
+    };
 
     console.log(records)
+    console.log(currentUser)
 
     const filteredRecords = records.filter((record) =>
         record.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    ).sort((a, b) => a.id - b.id);
 
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <SideNav />
+                <SideNav isEdited={isEdited} setIsEdited={setIsEdited} currentUser={currentUser} />
 
                 <Box
                     component="main"
@@ -66,10 +104,9 @@ export const Records = (props) => {
                         />
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
-                        {/* End hero unit */}
                         <Grid container spacing={4}>
                             {filteredRecords.map((record) => (
-                                <Grid item key={record} xs={12} sm={6} md={8} lg={2}>
+                                <Grid item key={record.id} xs={12} sm={6} md={8} lg={2}>
                                     <Card
                                         sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                                     >
@@ -85,16 +122,71 @@ export const Records = (props) => {
                                             <Typography>
                                                 {record.artists.map(artist => artist.name).join(', ')}
                                             </Typography>
+                                            <Divider />
                                             <Typography gutterBottom variant='h6' component="h6" sx={{ mt: 2 }}>
                                                 Collections:
                                             </Typography>
                                             <Typography>
-                                                {record.collection.name}
+                                                {record.collection && record.collection.name}
                                             </Typography>
                                         </CardContent>
                                         <CardActions>
-                                            <Button size="small">View</Button>
-                                            <Button size="small">Edit</Button>
+                                            <Tooltip title="Delete">
+                                                <IconButton onClick={handleDeleteOpen}>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Dialog open={deleteOpen} onClose={handleClose}>
+                                                <DialogTitle>Delete Record?</DialogTitle>
+                                                <DialogContent>
+                                                    <DialogContentText>
+                                                        Are you sure you want to delete this artist? This will also remove them from any records they are associated with in your collection.
+                                                    </DialogContentText>
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Button onClick={() => { handleDelete(record) }}>Yes, Please Delete</Button>
+                                                    <Tooltip title="Cancel">
+                                                        <IconButton onClick={handleClose}>
+                                                            <CloseIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </DialogActions>
+                                            </Dialog>
+                                            <Tooltip title="Edit Record">
+                                                <IconButton onClick={() => handleEditOpen(record.id)}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Dialog open={editOpen} onClose={handleClose}>
+                                                <DialogContent>
+                                                    <EditRecord recordId={editRecordId} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Tooltip title="Cancel">
+                                                        <IconButton onClick={handleClose}>
+                                                            <CloseIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </DialogActions>
+                                            </Dialog>
+
+                                            <Tooltip title="Add To Record">
+                                                <IconButton onClick={() => handleAddOpen(record.id)}>
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Dialog open={addOpen} onClose={handleClose}>
+                                                <DialogContent>
+                                                    <RecordArtist recordId={editRecordId} records={records} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Tooltip title="Cancel">
+                                                        <IconButton onClick={handleClose}>
+                                                            <CloseIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </DialogActions>
+                                            </Dialog>
                                         </CardActions>
                                     </Card>
                                 </Grid>
