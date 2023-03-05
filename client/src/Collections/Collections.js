@@ -8,8 +8,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import SideNav from '../Utils/SideNav';
 import EditCollection from './EditCollection';
+import CollectionDetail from './CollectionDetail';
 import CloseIcon from '@mui/icons-material/Close';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 
 const theme = createTheme();
@@ -22,16 +23,18 @@ export const Collections = () => {
     const userState = useSelector(state => state.user.users || [])
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [detailOpen, setDetailOpen] = useState(false);
     const [editCollectionId, setEditCollectionId] = useState(null);
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
     console.log(currentUser)
+    console.log(collections)
 
     useEffect(() => {
         dispatch(fetchCollections());
         console.log("Fetch Collections", collections)
-    }, [dispatch, isEdited]);
+    }, [dispatch, isEdited, currentUser]);
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -56,10 +59,16 @@ export const Collections = () => {
         setEditCollectionId(collectionId);
     };
 
+    const handleDetailOpen = (collectionId) => {
+        setDetailOpen(true);
+        setEditCollectionId(collectionId)
+    }
+
     const handleClose = () => {
         setEditOpen(false);
         setDeleteOpen(false);
-        setIsEdited(!isEdited)
+        setDetailOpen(false);
+        setIsEdited(!isEdited);
     };
 
     const handleDelete = (collection) => {
@@ -75,7 +84,6 @@ export const Collections = () => {
         const user = userState.find(user => user.id === collection.user_id);
         return user ? user.username : '';
     });
-
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
@@ -178,6 +186,23 @@ export const Collections = () => {
                                                         </DialogActions>
                                                     </Dialog></>
                                             )}
+                                            <Tooltip title="Collection Details">
+                                                <IconButton onClick={() => handleDetailOpen(collection.id)}>
+                                                    <MoreHorizIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Dialog open={detailOpen} onClose={handleClose}>
+                                                <DialogContent>
+                                                    <CollectionDetail collectionId={editCollectionId} currentUser={currentUser} />
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Tooltip title="Cancel">
+                                                        <IconButton onClick={handleClose}>
+                                                            <CloseIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </DialogActions>
+                                            </Dialog>
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -192,8 +217,7 @@ export const Collections = () => {
 }
 
 const mapStateToProps = (state) => {
-    // const userState = state.users.users
-    // return { userState }
+
 };
 
 const mapDispatchToProps = (dispatch) => ({
