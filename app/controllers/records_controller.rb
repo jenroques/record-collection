@@ -7,6 +7,11 @@ class RecordsController < ApplicationController
     render json: records
   end
 
+  def show
+    record = find_record
+    render json: record
+  end
+
   def create
     record = Record.create(record_params)
     render json: record, status: :created
