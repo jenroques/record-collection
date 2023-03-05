@@ -18,7 +18,7 @@ export const userSlice = createSlice({
             const index = state.findIndex((u) => u.id === id);
             state[index] = { ...user, id };
         },
-        addUser: (state, action) => {
+        createUser: (state, action) => {
             state.push(action.payload);
         },
         setIsCreated: (state, action) => {
@@ -27,10 +27,17 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
-            return action.payload.map((user) => {
+            console.log('fetchUsers.fulfilled', action.payload);
+            const users = action.payload.map((user) => {
                 const { id, ...rest } = user;
                 return { ...rest, id };
             });
+            console.log("users:", users)
+            return { ...state, users }
+        });
+        builder.addCase(fetchUsers.rejected, (state, action) => {
+            state.error = action.error.message;
+            console.log("Failed to fetch users:", action.error.message);
         });
         builder.addCase(fetchUserById.fulfilled, (state, action) => {
             const { id } = action.payload;
@@ -63,5 +70,4 @@ export const userSlice = createSlice({
     },
 });
 
-export { fetchUsers, fetchUserById, createUser, setIsCreated }
 export default userSlice.reducer
