@@ -18,16 +18,24 @@ export const recordSlice = createSlice({
         setCurrentRecord: (state, action) => {
             state.currentRecord(action.payload);
         },
-        addRecord: (state, action) => {
-            state.push(action.payload);
+        createRecord: (state, action) => {
+            state.records.push(action.payload);
+            console.log("Add Record triggered in Slice")
+
         },
         deleteRecord: (state, action) => {
             return state.filter((record) => record.id !== action.payload.id);
         },
-        updateRecord: (state, action) => {
-            const { id, ...updatedFields } = action.payload;
-            const recordIndex = state.findIndex((record) => record.id === id);
-            state[recordIndex] = { ...state[recordIndex], ...updatedFields };
+        editRecord: (state, action) => {
+            const updatedRecord = action.payload;
+            const index = state.records.findIndex((record) => record.id === updatedRecord.id);
+            if (index !== -1) {
+                state.records = [
+                    ...state.records.slice(0, index),
+                    updatedRecord,
+                    ...state.records.slice(index + 1),
+                ];
+            }
         },
     },
     extraReducers: (builder) => {
@@ -50,15 +58,8 @@ export const recordSlice = createSlice({
             }
         });
         builder.addCase(createRecord.fulfilled, (state, action) => {
-            state.push(action.payload);
-        });
-        builder.addCase(updateRecord.fulfilled, (state, action) => {
-            const { id } = action.payload;
-            const index = state.findIndex((record) => record.id === id);
-            state[index] = action.payload;
-        });
-        builder.addCase(deleteRecord.fulfilled, (state, action) => {
-            return state.filter((record) => record.id !== action.payload.id);
+            console.log("createRecord.fulfilled:", action.payload);
+            state.records.push(action.payload);
         });
     },
 });
