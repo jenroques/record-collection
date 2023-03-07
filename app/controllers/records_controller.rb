@@ -3,7 +3,7 @@ class RecordsController < ApplicationController
   wrap_parameters :record, include: [:title, artist_ids: [], artists: [:name]]
 
   def index
-    records = Record.all
+    records = Record.where(user_id: current_user.id)
     render json: records
   end
 
@@ -27,6 +27,16 @@ class RecordsController < ApplicationController
     record = find_record
     record.destroy
     head :no_content
+  end
+
+  def add_to_collection
+    record = find_record
+    if record.collection_id == params[:collection_id].to_i
+      render json: { message: 'Record already in collection.' }, status: :unprocessable_entity
+    else
+      record.update(collection_id: params[:collection_id])
+      render json: { message: 'Record added to collection.' }, status: :ok
+    end
   end
 
   def add_to_record
@@ -53,7 +63,7 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    params.require(:record).permit(:title, :image_url, :user_id, :collection_id)
+    params.permit(:title, :image_url, :user_id, :collection_id)
   end
 
   def update_record_params
