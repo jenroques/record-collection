@@ -3,7 +3,6 @@ import { fetchUsers, fetchUserById, createUser, setIsCreated, clearError } from 
 
 export const initialState = {
     users: [],
-    currentUser: null,
     isLoggedIn: false,
     error: null,
     isCreated: false,
@@ -51,12 +50,10 @@ export const userSlice = createSlice({
         builder.addCase(createUser.fulfilled, (state, action) => {
             const { ...user } = action.payload;
             state.users.push(user); // Add new user to the users array
-            state.currentUser = action.payload;
             state.isCreated = true;
             state.error = null; // Clear any previous error messages
             console.log("Create User Action a Go")
             console.log("Is Logged in ", state.isLoggedIn)
-            console.log(state.currentUser)
         });
         builder.addCase(createUser.rejected, (state, action) => {
             state.error = action.error.message;
