@@ -8,9 +8,19 @@ class ArtistsController < ApplicationController
     render json: artists
   end
 
+  def show
+    artist = find_artist
+    render json: artist
+  end
+
   def create
-    artist = Artist.create(artist_params)
-    render json: artist, status: :created
+    artist = Artist.find_by(name: artist_params[:name])
+    if artist
+      render json: { message: "Artist with name '#{artist_params[:name]}' already exists" }, status: :unprocessable_entity
+    else
+      artist = Artist.create(artist_params)
+      render json: artist, status: :created
+    end
   end
 
   def update
@@ -21,7 +31,6 @@ class ArtistsController < ApplicationController
 
   def destroy
     artist = find_artist
-    artist
     artist.destroy
     head :no_content
   end
@@ -33,7 +42,7 @@ class ArtistsController < ApplicationController
   end
 
   def artist_params
-    params.permit(:id, :name, :image_url, record_ids: [])
+    params.require(:artist).permit(:id, :name, :image_url, record_ids: [])
   end
 
 
