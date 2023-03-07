@@ -1,20 +1,38 @@
-import React, { useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
     createArtist,
 } from "../Action/actions";
 
 import {
+    Alert,
     TextField,
+    Snackbar,
     Button,
     Grid,
 } from "@mui/material";
 
-const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist }) => {
+const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist, setShouldFetchArtists }) => {
+    const status = useSelector((state) => state.artists.status);
+    const error = useSelector((state) => state.artists.error);
     const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+    const [open, setOpen] = useState(false);
 
+    useEffect(() => {
+        if (status === "rejected") {
+            setOpen(true);
+        }
+    }, [status]);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -27,10 +45,11 @@ const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         dispatch(createArtist({ name, image_url: imageUrl }));
-        setIsEdited(!isEdited)
+        setIsEdited(isEdited);
         setName("");
         setImageUrl("");
         handleCloseAddArtist();
+        setShouldFetchArtists(true);
     };
 
     return (
@@ -64,11 +83,16 @@ const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist }) => {
                     </Button>
                 </Grid>
             </Grid>
+            {error && open && (
+                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                    <Alert severity="error">{error}</Alert>
+                </Snackbar>
+            )}
         </form>
 
     );
 };
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const artists = state.artists.artists
     return { artists };
 };
