@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom';
 import { Alert, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -14,10 +14,11 @@ export const SignUp = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password_confirmation, setPasswordConfirmation] = useState('')
+    const error = useSelector((state) => state.user.error);
     const history = useHistory();
     const dispatch = useDispatch();
 
-    console.log("error: ", props.error)
+    console.log("error: ", error)
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -150,13 +151,13 @@ export const SignUp = (props) => {
                                     </Link>
                                 </Grid>
                             </Grid>
-                            {props.error &&
+                            {error &&
                                 <Alert
                                     variant="outlined"
                                     color="warning"
                                 >
                                     <Typography color="warning" fontWeight="md">
-                                        {props.error}
+                                        {error}
                                     </Typography>
                                 </Alert>
                             }
@@ -169,14 +170,12 @@ export const SignUp = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    error: state.user.error,
     isCreated: state.user.isCreated,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     createUser: (userData) => dispatch(createUser(userData)),
     setIsCreated: () => dispatch(setIsCreated()),
-    clearError: () => dispatch(clearError()),
 });
 
 
