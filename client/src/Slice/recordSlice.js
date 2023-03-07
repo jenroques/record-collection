@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRecords, fetchRecordById, createRecord, updateRecord, deleteRecord } from "../Action/actions";
+import { fetchRecords, fetchRecordById, createRecord, editRecord, deleteRecord } from "../Action/actions";
 
 export const initialState = {
     records: [],
@@ -37,6 +37,13 @@ export const recordSlice = createSlice({
                 ];
             }
         },
+        addRecordToCollection: (state, action) => {
+            const { id, collection_id } = action.payload;
+            const record = state.find((r) => r.id === id);
+            if (record) {
+                record.collection_id = collection_id;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchRecords.fulfilled, (state, action) => {
@@ -50,10 +57,6 @@ export const recordSlice = createSlice({
         });
         builder.addCase(fetchRecordById.fulfilled, (state, action) => {
             state.currentRecord = action.payload;
-        });
-        builder.addCase(createRecord.fulfilled, (state, action) => {
-            console.log("createRecord.fulfilled:", action.payload);
-            state.records.push(action.payload);
         });
     },
 });
