@@ -14,7 +14,7 @@ import {
     MenuItem
 } from "@mui/material";
 
-const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord }) => {
+const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord, setShouldFetchRecords }) => {
     const dispatch = useDispatch();
     const collections = useSelector((state) => state.collections.collections);
     const currentUser = useSelector((state) => state.session.currentUser)
@@ -45,11 +45,14 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord }) => {
         console.log("imageUrl:", imageUrl)
         console.log("currentUser.id", currentUser.user.id)
         dispatch(createRecord({ title, image_url: imageUrl, user_id: currentUser.user.id, collection_id: collectionId }));
-        setIsEdited(!isEdited)
+        setIsEdited(!isEdited);
+        setShouldFetchRecords(true);
         setTitle("");
         setImageUrl("");
         handleCloseAddRecord();
     };
+
+    const filteredCollections = collections.filter(collection => collection.user_id === currentUser.user.id);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -80,7 +83,7 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord }) => {
                     <Typography>Select a Collection for this Record</Typography>
                     <FormControl>
                         <Select value={collectionId} onChange={handleCollectionChange}>
-                            {collections.map((collection) => {
+                            {filteredCollections.map((collection) => {
                                 return (
                                     <MenuItem key={collection.id} value={collection.id} collection={collection.title}>
                                         {collection.name}
