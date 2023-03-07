@@ -11,6 +11,7 @@ import EditArtist from './EditArtist';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ManageArtistRecord from './ManageArtistRecord';
+import { current } from '@reduxjs/toolkit';
 
 const theme = createTheme();
 
@@ -18,17 +19,24 @@ const theme = createTheme();
 export const Artists = () => {
     const dispatch = useDispatch();
     const artists = useSelector((state) => state.artists.artists);
+    const currentUser = useSelector((state) => state.session.currentUser);
     const [addOpen, setAddOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
     const [editArtistId, setEditArtistId] = useState(null);
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
+    const [shouldFetchArtists, setShouldFetchArtists] = useState(false);
 
     useEffect(() => {
         dispatch(fetchArtists());
-    }, [dispatch, isEdited]);
+    }, [dispatch, shouldFetchArtists, isEdited])
+
+    useEffect(() => {
+        if (shouldFetchArtists) {
+            dispatch(fetchArtists());
+            setShouldFetchArtists(false);
+        }
+    }, [dispatch, shouldFetchArtists, isEdited]);
 
     const handleEditOpen = (artistId) => {
         setEditOpen(true);
@@ -40,35 +48,21 @@ export const Artists = () => {
         setEditArtistId(artistId);
     };
 
-    const handleDeleteOpen = (artistId) => {
-        setDeleteOpen(true);
-        setEditArtistId(artistId);
-    };
-
     const handleClose = () => {
         setEditOpen(false);
-        setDeleteOpen(false);
         setAddOpen(false);
         setIsEdited(!isEdited)
     };
 
-    const handleDelete = (artist) => {
-        dispatch(deleteArtist(artist.id));
-        setIsEdited(!isEdited);
-        handleClose();
-    };
-
-    console.log(artists)
 
     const filteredArtists = artists.filter((artist) =>
         artist.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ).sort((a, b) => a.id - b.id);
-
+    ).sort((a, b) => a.name.localeCompare(b.name));
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <SideNav setIsEdited={setIsEdited} isEdited={isEdited} />
+                <SideNav setIsEdited={setIsEdited} isEdited={isEdited} setShouldFetchArtists={setShouldFetchArtists} />
 
                 <Box
                     component="main"
@@ -104,7 +98,7 @@ export const Artists = () => {
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
                         <Grid container spacing={4}>
-                            {filteredArtists.map((artist) => (
+                            {filteredArtists.filter((artist) => currentUser.id === artist.user_id).map((artist) => (
                                 <Grid item key={artist.id} xs={12} sm={6} md={8} lg={2}>
                                     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <CardMedia component="img" image={artist.image_url} alt="record_image" />
@@ -121,27 +115,6 @@ export const Artists = () => {
                                             ))}
                                         </CardContent>
                                         <CardActions>
-                                            <Tooltip title="Delete">
-                                                <IconButton onClick={handleDeleteOpen}>
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Dialog open={deleteOpen} onClose={handleClose}>
-                                                <DialogTitle>Delete Artist?</DialogTitle>
-                                                <DialogContent>
-                                                    <DialogContentText>
-                                                        Are you sure you want to delete this artist? This will also remove them from any records they are associated with in your collection.
-                                                    </DialogContentText>
-                                                </DialogContent>
-                                                <DialogActions>
-                                                    <Button onClick={() => { handleDelete(artist) }}>Yes, Please Delete</Button>
-                                                    <Tooltip title="Cancel">
-                                                        <IconButton onClick={handleClose}>
-                                                            <CloseIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </DialogActions>
-                                            </Dialog>
                                             <Tooltip title="Edit Artist">
                                                 <IconButton onClick={() => handleEditOpen(artist.id)}>
                                                     <EditIcon />
@@ -167,7 +140,7 @@ export const Artists = () => {
                                             </Tooltip>
                                             <Dialog open={addOpen} onClose={handleClose}>
                                                 <DialogContent>
-                                                    <ManageArtistRecord artistId={editArtistId} artistName={artist.name} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
+                                                    <ManageArtistRecord artistId={editArtistId} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
                                                 </DialogContent>
                                                 <DialogActions>
                                                     <Tooltip title="Cancel">
