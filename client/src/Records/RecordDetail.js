@@ -37,7 +37,8 @@ export const RecordDetail = ({ recordId }) => {
                                     {recordDetail.title}
                                 </Typography>
                                 <Typography>
-                                    {recordDetail && recordDetail.artists && recordDetail.artists[0].name}
+                                    {recordDetail && recordDetail.artists && recordDetail.artists.length > 0 &&
+                                        recordDetail.artists.map(artist => artist.name).filter(name => name).join(', ')}
                                 </Typography>
                                 <Divider />
                                 <Typography gutterBottom variant="h6" component="h6" sx={{ mt: 2 }}>
