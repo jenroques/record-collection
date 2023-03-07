@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
-    addArtistToRecord,
+    addArtistToRecord, fetchArtistById,
 } from "../Action/actions";
 
 import {
@@ -13,11 +13,16 @@ import {
     Typography
 } from "@mui/material";
 
-const ManageArtistRecord = ({ artistName, handleClose, isEdited, setIsEdited }) => {
+const ManageArtistRecord = ({ artistId, handleClose, isEdited, setIsEdited }) => {
     const dispatch = useDispatch();
+    const currentArtist = useSelector((state) => state.artists.currentArtist)
     const [recordId, setRecordId] = useState("");
     const [recordTitle, setRecordTitle] = useState("");
     const records = useSelector((state) => state.records.records);
+
+    useEffect(() => {
+        dispatch(fetchArtistById(artistId))
+    }, [isEdited, recordId])
 
     const handleRecordChange = (event) => {
         const selectedRecord = records.find((record) => record.id === parseInt(event.target.value));
@@ -25,13 +30,15 @@ const ManageArtistRecord = ({ artistName, handleClose, isEdited, setIsEdited }) 
         setRecordTitle(selectedRecord.title);
     };
 
-    console.log(recordTitle)
-    console.log(recordId)
+    console.log("Record Title", recordTitle)
+    console.log("Record ID", recordId)
+    console.log("Current Artist", currentArtist.name)
+    console.log("Artist ID", artistId)
 
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(recordTitle)
-        dispatch(addArtistToRecord({ recordId: recordId, artistName: artistName }));
+        dispatch(addArtistToRecord({ id: recordId, name: currentArtist.name }));
         setRecordId("");
         setRecordTitle("");
         handleClose();
@@ -42,7 +49,7 @@ const ManageArtistRecord = ({ artistName, handleClose, isEdited, setIsEdited }) 
         <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Typography>Add {artistName} to a Record?</Typography>
+                    <Typography>Add {currentArtist.name} to a Record?</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <>
