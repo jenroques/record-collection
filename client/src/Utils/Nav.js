@@ -5,7 +5,7 @@ import { AppBar, Box, Button, Container, Menu, MenuItem, Toolbar, Tooltip, Typog
 import IconButton from '@mui/material/IconButton';
 import Logo from '../Assets/logo.png';
 import MenuIcon from '@mui/icons-material/Menu';
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
 import { logout, setIsCreated } from "../Action/actions"
@@ -14,6 +14,7 @@ import { logout, setIsCreated } from "../Action/actions"
 const Nav = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const currentUser = useSelector((state) => state.session.currentUser);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -29,8 +30,8 @@ const Nav = () => {
 
     const pages = [
         { name: "Records", path: "/records" },
-        { name: "Artists", path: "/artists" },
         { name: "Collections", path: "/collections" },
+        { name: "Artist Database", path: "/artists" },
     ];
 
     const settings = [
