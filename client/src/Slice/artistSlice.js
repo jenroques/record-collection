@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchArtists, fetchArtistById, deleteArtist, deleteArtistFromRecord, editArtist } from "../Action/actions";
+import { fetchArtists, fetchArtistById, deleteArtist, deleteArtistFromRecord, editArtist, createArtist } from "../Action/actions";
 
 export const initialState = {
     artists: [],
+    currentArtist: [],
+    status: null,
+    error: null
 };
 
 export const artistSlice = createSlice({
@@ -17,7 +20,7 @@ export const artistSlice = createSlice({
             }
             return state;
         },
-        addArtist: (state, action) => {
+        createArtist: (state, action) => {
             state.artists.push(action.payload);
         },
         deleteArtist: (state, action) => {
@@ -36,26 +39,31 @@ export const artistSlice = createSlice({
                     ...state.artists.slice(index + 1),
                 ];
             }
+        }, addArtistToRecord: (state, action) => {
+            const { id, name } = action.payload;
+            const artistIndex = state.artists.findIndex(artist => artist.name === name);
+            if (artistIndex === -1) {
+                // If the artist is not already in the array, add them as a new object
+                state.artists.push({ name: name, records: [id] });
+            } else {
+                // If the artist is already in the array, update their record list
+                state.artists = state.artists.map((artist, index) =>
+                    index === artistIndex ? { ...artist, records: [...artist.records, id] } : artist
+                );
+            }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchArtists.fulfilled, (state, action) => {
-            console.log('fetchArtists.fulfilled:', action.payload);
             const artists = action.payload.map((artist) => {
                 const { id, ...rest } = artist;
                 return { ...rest, id };
             });
-            console.log('artists:', artists);
             return { ...state, artists };
         });
         builder.addCase(fetchArtistById.fulfilled, (state, action) => {
-            const { id } = action.payload;
-            const index = state.artists.findIndex((artist) => artist.id === id);
-            if (index !== -1) {
-                state.artists[index] = action.payload;
-            } else {
-                state.artists.push(action.payload);
-            }
+            const { payload } = action;
+            state.currentArtist = payload;
         });
         builder.addCase(deleteArtistFromRecord.fulfilled, (state, action) => {
             const artistId = action.payload.id;
@@ -63,6 +71,12 @@ export const artistSlice = createSlice({
                 ...state,
                 artists: state.artists.filter((artist) => artist.id !== artistId),
             };
+        });
+        builder.addCase(createArtist.fulfilled, (state, action) => {
+            state.artists.push(action.payload);
+        });
+        builder.addCase(createArtist.rejected, (state, action) => {
+            state.error = action.error.message;
         });
     },
 });
