@@ -3,7 +3,7 @@ import { connect, useSelector, useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Toolbar, Paper, Grid, Container, Typography } from '@mui/material';
 
-import SideNav from './SideNav';
+import SideNav from '../Utils/SideNav';
 import { fetchRecords, fetchCollections, fetchArtists } from '../Action/actions';
 
 const theme = createTheme();
@@ -14,17 +14,22 @@ export const Home = () => {
     const records = useSelector((state) => state.records.records);
     const collections = useSelector((state) => state.collections.collections);
     const artists = useSelector((state) => state.artists.artists);
+    const currentUser = useSelector((state) => state.session.currentUser);
     const totalRecords = records.length;
+
+    console.log("Current User", currentUser)
 
     useEffect(() => {
         dispatch(fetchRecords());
     }, [dispatch]);
 
-    console.log(records)
-    console.log(collections)
-    console.log(artists)
-    console.log("ET Phone Home?")
-    console.log(totalRecords)
+    useEffect(() => {
+        dispatch(fetchCollections());
+    }, [dispatch])
+
+    useEffect(() => {
+        dispatch(fetchArtists());
+    }, [dispatch])
 
     return (
         <ThemeProvider theme={theme}>
