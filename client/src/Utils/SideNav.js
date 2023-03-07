@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Tooltip, Toolbar, List, Divider, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -15,7 +15,7 @@ import RecordMini from '../Assets/vinyl.png';
 
 import AddArtist from '../Artists/AddArtist';
 import CreateCollection from '../Collections/CreateCollection';
-import AddRecord from '../Records/AddRecord';
+import CreateRecord from '../Records/CreateRecord';
 
 import { logout, setIsCreated } from "../Action/actions"
 
@@ -68,10 +68,11 @@ const UtilityDialog = (props) => {
     );
 };
 
-const SideNav = ({ setIsEdited, isEdited, currentUser }) => {
+const SideNav = ({ setIsEdited, isEdited, setShouldFetchArtists, setShouldFetchRecords }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const history = useHistory();
+    const currentUser = useSelector((state) => state.session.currentUser)
     const [open, setOpen] = useState(false);
     const [openAddRecord, setOpenAddRecord] = useState(false);
     const [openAddArtist, setOpenAddArtist] = useState(false);
@@ -121,7 +122,6 @@ const SideNav = ({ setIsEdited, isEdited, currentUser }) => {
             });
     }
 
-
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
@@ -148,7 +148,7 @@ const SideNav = ({ setIsEdited, isEdited, currentUser }) => {
                                     <img src={RecordMini} alt="Vinyl Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
                                     <Typography variant="button" sx={{ ml: 3 }}>Add Record</Typography>
                                 </IconButton>
-                                <UtilityDialog open={openAddRecord} onClose={handleCloseAddRecord} dialogContent={<AddRecord handleCloseAddRecord={handleCloseAddRecord} setIsEdited={setIsEdited} isEdited={isEdited} currentUser={currentUser} />} title="Add Record" />
+                                <UtilityDialog open={openAddRecord} onClose={handleCloseAddRecord} dialogContent={<CreateRecord handleCloseAddRecord={handleCloseAddRecord} setIsEdited={setIsEdited} isEdited={isEdited} currentUser={currentUser} setShouldFetchRecords={setShouldFetchRecords} />} title="Add Record" />
                                 <Divider sx={{ my: 1 }} />
                             </>
                         )}
@@ -158,7 +158,7 @@ const SideNav = ({ setIsEdited, isEdited, currentUser }) => {
                                     <PersonAddIcon alt="Artist Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
                                     <Typography variant="button" sx={{ ml: 3 }}>Add Artist</Typography>
                                 </IconButton>
-                                <UtilityDialog open={openAddArtist} onClose={handleCloseAddArtist} dialogContent={<AddArtist handleCloseAddArtist={handleCloseAddArtist} setIsEdited={setIsEdited} isEdited={isEdited} />} title="Add Artist" />
+                                <UtilityDialog open={openAddArtist} onClose={handleCloseAddArtist} dialogContent={<AddArtist handleCloseAddArtist={handleCloseAddArtist} setIsEdited={setIsEdited} isEdited={isEdited} setShouldFetchArtists={setShouldFetchArtists} />} title="Add Artist" />
                                 <Divider sx={{ my: 1 }} />
                             </>
                         )}
