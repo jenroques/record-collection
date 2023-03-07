@@ -11,9 +11,7 @@ Rails.application.routes.draw do
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
-  post "/addtocollection", to: "collections#add_to_collection"
-  delete "/deletefromcollection", to: "collections#delete_from_collection"
-
+  patch "/addtocollection", to: "records#add_to_collection"
   post "/addtorecord", to: "records#add_to_record"
   delete "/deletefromrecord", to: "records#delete_from_record"
 
