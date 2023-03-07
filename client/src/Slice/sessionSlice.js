@@ -7,8 +7,6 @@ export const initialState = {
     isLoggedIn: false,
     error: null,
     sessionId: localStorage.getItem("sessionId") || null,
-    ...userInitialState,
-
 }
 
 export const sessionSlice = createSlice({
@@ -18,6 +16,9 @@ export const sessionSlice = createSlice({
         clearError: (state) => {
             state.error = null;
             console.log("Error cleared");
+        },
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -27,26 +28,19 @@ export const sessionSlice = createSlice({
             state.isLoggedIn = true;
             state.isCreated = false;
             state.error = null
-            console.log("Is created?", state.isCreated)
-            console.log(state.currentUser);
-            console.log("Is Logged In?", state.isLoggedIn);
         });
         builder.addCase(login.rejected, (state, action) => {
             state.error = action.error.message;
             state.isLoggedIn = false;
-            console.log("Login failed with error:", action.error.message);
         });
         builder.addCase(logout.fulfilled, (state, action) => {
             state.currentUser = null;
             state.isLoggedIn = false;
             state.sessionId = null;
             state.setIsCreated = false;
-            console.log("Logged in? ", state.isLoggedIn)
-            console.log("Session id: ", state.sessionId)
-            console.log("Logout Success")
         });
         builder.addCase(authenticate.fulfilled, (state, action) => {
-            state.currentUser = action.payload.user;
+            state.currentUser = action.payload;
             state.sessionId = localStorage.getItem("sessionId");
             state.isLoggedIn = true;
         });
