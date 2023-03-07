@@ -7,10 +7,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import SideNav from '../Utils/SideNav';
+import AddToRecord from './AddToRecord';
 import EditCollection from './EditCollection';
 import CollectionDetail from './CollectionDetail';
 import CloseIcon from '@mui/icons-material/Close';
+import MapsUgcIcon from '@mui/icons-material/MapsUgc';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
 
 
 const theme = createTheme();
@@ -18,28 +21,26 @@ const theme = createTheme();
 
 export const Collections = () => {
     const dispatch = useDispatch();
-    const currentUser = useSelector((state) => state.session.currentUser);
     const collections = useSelector((state) => state.collections.collections);
     const userState = useSelector(state => state.user.users || [])
+    const currentUser = useSelector((state) => state.session.currentUser);
     const [editOpen, setEditOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [editCollectionId, setEditCollectionId] = useState(null);
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    console.log(currentUser)
-    console.log(collections)
-
     useEffect(() => {
         dispatch(fetchCollections());
         console.log("Fetch Collections", collections)
-    }, [dispatch, isEdited, currentUser]);
+    }, [dispatch, isEdited, currentUser, userState]);
 
     useEffect(() => {
         dispatch(fetchUsers());
         console.log("Fetch Users", userState)
-    }, [dispatch, isEdited]);
+    }, [dispatch, isEdited, currentUser]);
 
     useEffect(() => {
         if (userState.length === 0) {
@@ -64,11 +65,17 @@ export const Collections = () => {
         setEditCollectionId(collectionId)
     }
 
+    const handleAddOpen = (collectionId) => {
+        setAddOpen(true);
+        setEditCollectionId(collectionId)
+    }
+
     const handleClose = () => {
         setEditOpen(false);
         setDeleteOpen(false);
         setDetailOpen(false);
         setIsEdited(!isEdited);
+        setAddOpen(false);
     };
 
     const handleDelete = (collection) => {
@@ -149,16 +156,17 @@ export const Collections = () => {
                                             )}
                                         </CardContent>
                                         <CardActions>
-                                            {currentUser && currentUser.id === collection.user_id && (
-                                                <><Tooltip title="Delete">
-                                                    <IconButton onClick={handleDeleteOpen}>
-                                                        <DeleteForeverIcon />
-                                                    </IconButton>
-                                                </Tooltip><Dialog open={deleteOpen} onClose={handleClose}>
+                                            {currentUser && currentUser.user.id === collection.user_id && collection.records.length === 0 && (
+                                                <>
+                                                    <Tooltip title="Delete">
+                                                        <IconButton onClick={handleDeleteOpen}>
+                                                            <DeleteForeverIcon />
+                                                        </IconButton>
+                                                    </Tooltip><Dialog open={deleteOpen} onClose={handleClose}>
                                                         <DialogTitle>Delete Collection?</DialogTitle>
                                                         <DialogContent>
                                                             <DialogContentText>
-                                                                Are you sure you want to delete this Collection? This will also remove them from any records they are associated with in your collection.
+                                                                Are you sure you want to delete this Collection?
                                                             </DialogContentText>
                                                         </DialogContent>
                                                         <DialogActions>
@@ -169,7 +177,12 @@ export const Collections = () => {
                                                                 </IconButton>
                                                             </Tooltip>
                                                         </DialogActions>
-                                                    </Dialog><Tooltip title="Edit Collection">
+                                                    </Dialog>
+                                                </>
+                                            )}
+                                            {currentUser && currentUser.user.id === collection.user_id && (
+                                                <>
+                                                    <Tooltip title="Edit Collection">
                                                         <IconButton onClick={() => handleEditOpen(collection.id)}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -184,25 +197,49 @@ export const Collections = () => {
                                                                 </IconButton>
                                                             </Tooltip>
                                                         </DialogActions>
-                                                    </Dialog></>
+                                                    </Dialog>
+                                                </>
                                             )}
-                                            <Tooltip title="Collection Details">
-                                                <IconButton onClick={() => handleDetailOpen(collection.id)}>
-                                                    <MoreHorizIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Dialog open={detailOpen} onClose={handleClose}>
-                                                <DialogContent>
-                                                    <CollectionDetail collectionId={editCollectionId} currentUser={currentUser} />
-                                                </DialogContent>
-                                                <DialogActions>
-                                                    <Tooltip title="Cancel">
-                                                        <IconButton onClick={handleClose}>
-                                                            <CloseIcon />
+                                            {currentUser && currentUser.user.id === collection.user_id && userState.find(user => user.id === currentUser.user.id).records.length > 0 && (
+                                                <>
+                                                    <Tooltip title="Add a Record">
+                                                        <IconButton onClick={() => handleAddOpen(collection.id)}>
+                                                            <MapsUgcIcon />
                                                         </IconButton>
                                                     </Tooltip>
-                                                </DialogActions>
-                                            </Dialog>
+                                                    <Dialog open={addOpen} onClose={handleClose}>
+                                                        <DialogContent>
+                                                            <AddToRecord collectionId={editCollectionId} currentUser={currentUser} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} collection={collection.name} />
+                                                        </DialogContent>
+                                                        <DialogActions>
+                                                            <Tooltip title="Cancel">
+                                                                <IconButton onClick={handleClose}>
+                                                                    <CloseIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </DialogActions>
+                                                    </Dialog>
+                                                </>
+                                            )}
+                                            <>
+                                                <Tooltip title="Collection Details">
+                                                    <IconButton onClick={() => handleDetailOpen(collection.id)}>
+                                                        <MoreHorizIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Dialog open={detailOpen} onClose={handleClose}>
+                                                    <DialogContent>
+                                                        <CollectionDetail collectionId={editCollectionId} currentUser={currentUser} />
+                                                    </DialogContent>
+                                                    <DialogActions>
+                                                        <Tooltip title="Cancel">
+                                                            <IconButton onClick={handleClose}>
+                                                                <CloseIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </DialogActions>
+                                                </Dialog>
+                                            </>
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -217,7 +254,8 @@ export const Collections = () => {
 }
 
 const mapStateToProps = (state) => {
-
+    const currentUser = state.session.currentUser
+    return { currentUser }
 };
 
 const mapDispatchToProps = (dispatch) => ({
