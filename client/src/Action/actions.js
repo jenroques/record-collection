@@ -144,14 +144,15 @@ export const fetchRecordById = createAsyncThunk(
 
 export const createRecord = createAsyncThunk(
     "records/createRecord",
-    async ({ title, image_url, user_id }) => {
+    async ({ title, image_url, user_id, collection_id }) => {
         try {
+            console.log("Sending createRecord request:", { title, image_url, user_id, collection_id });
             const response = await fetch("/records", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ title, image_url, user_id }),
+                body: JSON.stringify({ title, image_url, user_id, collection_id }),
             });
             const data = await response.json();
             console.log("createRecord response:", data);
@@ -162,6 +163,7 @@ export const createRecord = createAsyncThunk(
         }
     }
 );
+
 
 
 export const editRecord = createAsyncThunk(
@@ -242,24 +244,29 @@ export const editCollection = createAsyncThunk(
 
 export const deleteCollection = createAsyncThunk(
     "collections/deleteCollection",
-    async (id) => {
-        const response = await fetch(`/collections/${id}`, {
+    async (id, { rejectWithValue }) => {
+        const response = await fetch(`/collections/${id}`);
+        const collection = await response.json();
+        if (collection.records.length > 0) {
+            return rejectWithValue("Can only delete collection when all records have been moved");
+        }
+        const deleteResponse = await fetch(`/collections/${id}`, {
             method: "DELETE",
         });
-        const data = await response.json();
+        const data = await deleteResponse.json();
         return data;
     }
 );
 
 export const addRecordToCollection = createAsyncThunk(
     "collections/addRecordToCollection",
-    async ({ recordId, collectionId }) => {
-        const response = await fetch(`/addtocollection`, {
-            method: "POST",
+    async ({ id, collection_id }) => {
+        const response = await fetch(`addtocollection`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ recordId }),
+            body: JSON.stringify({ id, collection_id }),
         });
         const data = await response.json();
         if (!response.ok) {
@@ -269,16 +276,17 @@ export const addRecordToCollection = createAsyncThunk(
     }
 );
 
-export const deleteRecordFromCollection = createAsyncThunk(
-    "collections/deleteRecordFromCollection",
-    async ({ recordId, collectionId }) => {
-        const response = await fetch(`/deletefromrecord`, {
-            method: "DELETE",
-        });
-        const data = await response.json();
-        return data;
-    }
-);
+
+// export const deleteRecordFromCollection = createAsyncThunk(
+//     "collections/deleteRecordFromCollection",
+//     async ({ recordId, collectionId }) => {
+//         const response = await fetch(`/deletefromrecord`, {
+//             method: "DELETE",
+//         });
+//         const data = await response.json();
+//         return data;
+//     }
+// );
 
 // ARTISTS
 
@@ -303,15 +311,20 @@ export const fetchArtistById = createAsyncThunk(
 export const createArtist = createAsyncThunk(
     "artists/createArtist",
     async (artistData) => {
-        const response = await fetch("/artists", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(artistData),
-        });
-        const artist = await response.json();
-        return artist;
+        try {
+            const response = await fetch("/artists", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(artistData),
+            });
+            const artist = await response.json();
+            return artist;
+        } catch (error) {
+            const errorResponse = await error.response.json();
+            throw new Error(errorResponse.message);
+        }
     }
 );
 
@@ -343,15 +356,15 @@ export const deleteArtist = createAsyncThunk(
 
 export const addArtistToRecord = createAsyncThunk(
     "records/addArtistToRecord",
-    async ({ recordId, artistName }) => {
+    async ({ id, name }) => {
         const response = await fetch('/addtorecord', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                record_id: recordId,
-                name: artistName,
+                id,
+                name
             }),
         });
         const data = await response.json();
