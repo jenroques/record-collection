@@ -24,7 +24,7 @@ export const recordSlice = createSlice({
 
         },
         deleteRecord: (state, action) => {
-            return state.filter((record) => record.id !== action.payload.id);
+            return state.filter((record) => record.id !== action.payload);
         },
         editRecord: (state, action) => {
             const updatedRecord = action.payload;
