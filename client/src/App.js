@@ -42,9 +42,21 @@ function App() {
     <BrowserRouter>
       {isLoggedIn && <Nav />}
       <Switch>
-        <Route exact path="/" component={Login} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={SignUp} />
+        {isLoggedIn ? (
+          <Redirect exact from="/" to="/welcome" />
+        ) : (
+          <Route exact path="/" component={Login} />
+        )}
+        {isLoggedIn ? (
+          <Redirect exact from="/login" to="/welcome" />
+        ) : (
+          <Route path="/login" component={Login} />
+        )}
+        {isLoggedIn ? (
+          <Redirect exact from="/signup" to="/welcome" />
+        ) : (
+          <Route path="/signup" component={SignUp} />
+        )}
         {isLoggedIn ? (
           <>
             <Route path="/artists" component={Artists} />
