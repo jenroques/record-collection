@@ -14,6 +14,7 @@ Record Collector is a simple and user-friendly application that allows you to ke
 * Multiple Collections: Each user can have multiple collections based on moods, or genres! 
 * Community Collections: View other users collections in the community! 
 * Secured Collections: Even though any user can view collections, only the owner of that collection has the ability to edit or delete! 
+* Check your stats: Check out the User Profile for stats on your collection. 
 
 ###### Basics: 
 * Open the app and create an account.
