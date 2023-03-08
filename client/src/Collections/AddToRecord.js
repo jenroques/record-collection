@@ -20,7 +20,7 @@ const AddRecord = ({ setIsEdited, isEdited, handleClose, collectionId }) => {
     const [recordId, setRecordId] = useState(null);
 
 
-    console.log("CurrentUser Id", currentUser.user.id);
+    console.log("CurrentUser Id", currentUser.id);
     console.log("Collection Id", collectionId)
     console.log("Record id", recordId)
 
@@ -41,7 +41,7 @@ const AddRecord = ({ setIsEdited, isEdited, handleClose, collectionId }) => {
     };
 
 
-    const filteredRecords = records.filter(record => record.user_id === currentUser.user.id);
+    const filteredRecords = records.filter(record => record.user_id === currentUser.id);
     return (
         <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
