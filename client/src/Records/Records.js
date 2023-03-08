@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SideNav from '../Utils/SideNav';
 import RecordDetail from '../Records/RecordDetail';
-
+import Recs from '../Assets/recs.png'
 import AddToCollection from './AddToCollection';
 import EditRecord from '../Records/EditRecord';
 
@@ -34,7 +34,6 @@ export const Records = () => {
         dispatch(fetchRecords());
     }, [dispatch, isEdited, currentUser, editRecordId]);
 
-
     useEffect(() => {
         if (shouldFetchRecords) {
             dispatch(fetchRecords());
@@ -53,9 +52,9 @@ export const Records = () => {
         setIsEdited(!isEdited)
     };
 
-    const handleDeleteOpen = (recordId) => {
+    const handleDeleteOpen = (record) => {
         setDeleteOpen(true);
-        setEditRecordId(recordId);
+        setEditRecordId(record);
     };
 
     const handleDetailOpen = (recordId) => {
@@ -72,8 +71,10 @@ export const Records = () => {
     }
 
     const handleDelete = (record) => {
+        console.log(record.id)
         dispatch(deleteRecord(record.id));
         setIsEdited(!isEdited);
+        setShouldFetchRecords(true);
         handleClose();
     };
 
@@ -102,29 +103,33 @@ export const Records = () => {
                     >
 
                         <>
-                            <Container sx={{ display: 'flex', py: 0 }} maxWidth="md">
-                                <TextField
-                                    sx={{
-                                        mt: 5,
-                                        mr: 5,
-                                    }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <SearchIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    label="Search"
-                                    variant="standard"
-                                    value={searchQuery}
-                                    fullWidth
-                                    onChange={(event) => setSearchQuery(event.target.value)} />
+                            <Container sx={{ display: 'flex', py: 0 }} maxWidth="l">
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
+                                        <img src={Recs} alt="Logo" width="400" height="150" />
+                                    </Grid>
+                                    <Grid item xs>
+                                        <TextField
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <SearchIcon />
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                            label="Search"
+                                            variant="standard"
+                                            value={searchQuery}
+                                            fullWidth
+                                            onChange={(event) => setSearchQuery(event.target.value)}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </Container>
                             <Container sx={{ py: 3 }} maxWidth="100%">
 
                                 <Grid container spacing={4}>
-                                    {filteredRecords.filter((record) => currentUser.user.id === record.user_id)
+                                    {filteredRecords.filter((record) => currentUser.id === record.user_id)
                                         .map((record) => (
                                             <Grid item key={record.id} xs={12} sm={6} md={8} lg={2}>
                                                 <Card
@@ -165,7 +170,7 @@ export const Records = () => {
                                                                 </DialogContentText>
                                                             </DialogContent>
                                                             <DialogActions>
-                                                                <Button onClick={() => { handleDelete(record); }}>Yes, Please Delete</Button>
+                                                                <Button onClick={() => { handleDelete(record) }}>Yes, Please Delete</Button>
                                                                 <Tooltip title="Cancel">
                                                                     <IconButton onClick={handleClose}>
                                                                         <CloseIcon />
