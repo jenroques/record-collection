@@ -20,7 +20,7 @@ const AddToCollection = ({ setIsEdited, isEdited, handleClose, recordId }) => {
     const [collectionId, setCollectionId] = useState(null);
 
 
-    console.log("CurrentUser Id", currentUser.user.id);
+    console.log("CurrentUser Id", currentUser.id);
     console.log("Collection Id", collectionId)
     console.log("Record id", recordId)
 
@@ -40,7 +40,7 @@ const AddToCollection = ({ setIsEdited, isEdited, handleClose, recordId }) => {
         handleClose();
     };
 
-    const filteredCollections = collections.filter(collection => collection.user_id === currentUser.user.id);
+    const filteredCollections = collections.filter(collection => collection.user_id === currentUser.id);
     return (
         <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
