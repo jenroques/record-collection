@@ -72,12 +72,6 @@ export const artistSlice = createSlice({
                 artists: state.artists.filter((artist) => artist.id !== artistId),
             };
         });
-        builder.addCase(createArtist.fulfilled, (state, action) => {
-            state.artists.push(action.payload);
-        });
-        builder.addCase(createArtist.rejected, (state, action) => {
-            state.error = action.error.message;
-        });
     },
 });
 
