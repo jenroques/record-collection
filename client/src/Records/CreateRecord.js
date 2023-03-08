@@ -92,11 +92,13 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord, setShouldFetch
                             })}
                         </Select>
                     </FormControl>
-                    <div>
-                        <Button type="submit">
-                            Add Record
-                        </Button>
-                    </div>
+                    {filteredCollections.length > 0 && (
+                        <div>
+                            <Button type="submit">
+                                Add Record
+                            </Button>
+                        </div>
+                    )}
                 </Grid>
             </Grid>
         </form>
