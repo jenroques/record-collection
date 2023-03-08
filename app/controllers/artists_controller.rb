@@ -16,7 +16,7 @@ class ArtistsController < ApplicationController
   def create
     artist = Artist.find_by(name: artist_params[:name])
     if artist
-      render json: { message: "Artist with name '#{artist_params[:name]}' already exists" }, status: :unprocessable_entity
+      render json: { error: "Artist with name '#{artist_params[:name]}' already exists" }, status: :unprocessable_entity
     else
       artist = Artist.create(artist_params)
       render json: artist, status: :created
