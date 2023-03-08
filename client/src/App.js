@@ -27,8 +27,16 @@ function App() {
           console.log("Authentication failed:", error.message);
         });
     }
-  }, [dispatch]);
-
+    const handleBeforeUnload = () => {
+      if (!isLoggedIn) {
+        localStorage.removeItem("sessionId");
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [dispatch, isLoggedIn]);
 
   return (
     <BrowserRouter>
