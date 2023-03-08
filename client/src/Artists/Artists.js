@@ -11,7 +11,7 @@ import EditArtist from './EditArtist';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ManageArtistRecord from './ManageArtistRecord';
-import { current } from '@reduxjs/toolkit';
+import Arts from '../Assets/arts.png'
 
 const theme = createTheme();
 
@@ -53,7 +53,8 @@ export const Artists = () => {
         setAddOpen(false);
         setIsEdited(!isEdited)
     };
-
+    console.log(artists)
+    console.log("CurrentUser", currentUser)
 
     const filteredArtists = artists.filter((artist) =>
         artist.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -76,30 +77,33 @@ export const Artists = () => {
                         overflow: 'auto',
                     }}
                 >
-                    <Container sx={{ display: 'flex', py: 0 }} maxWidth="md">
-                        <TextField
-                            sx={{
-                                mt: 5,
-                                mr: 5,
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            label="Search"
-                            variant="standard"
-                            value={searchQuery}
-                            fullWidth
-                            onChange={(event) => setSearchQuery(event.target.value)}
-                        />
+                    <Container sx={{ display: 'flex', py: 0 }} maxWidth="l">
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item>
+                                <img src={Arts} alt="Logo" width="400" height="150" />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    label="Search"
+                                    variant="standard"
+                                    value={searchQuery}
+                                    fullWidth
+                                    onChange={(event) => setSearchQuery(event.target.value)}
+                                />
+                            </Grid>
+                        </Grid>
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
                         <Grid container spacing={4}>
-                            {filteredArtists.filter((artist) => currentUser.id === artist.user_id).map((artist) => (
-                                <Grid item key={artist.id} xs={12} sm={6} md={8} lg={2}>
+                            {filteredArtists.map((artist) => (
+                                < Grid item key={artist.id} xs={12} sm={6} md={8} lg={2}>
                                     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <CardMedia component="img" image={artist.image_url} alt="record_image" />
                                         <CardContent sx={{ flexGrow: 1 }}>
@@ -159,7 +163,7 @@ export const Artists = () => {
                     </Container>
                 </Box>
             </Box>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 
 }
