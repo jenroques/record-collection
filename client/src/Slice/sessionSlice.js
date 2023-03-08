@@ -15,7 +15,6 @@ export const sessionSlice = createSlice({
     reducers: {
         clearError: (state) => {
             state.error = null;
-            console.log("Error cleared");
         },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
@@ -23,7 +22,7 @@ export const sessionSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.user;
             state.sessionId = action.payload.session_id;
             state.isLoggedIn = true;
             state.isCreated = false;
@@ -40,7 +39,7 @@ export const sessionSlice = createSlice({
             state.setIsCreated = false;
         });
         builder.addCase(authenticate.fulfilled, (state, action) => {
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.user;
             state.sessionId = localStorage.getItem("sessionId");
             state.isLoggedIn = true;
         });
