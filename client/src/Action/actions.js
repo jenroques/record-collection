@@ -311,20 +311,20 @@ export const fetchArtistById = createAsyncThunk(
 export const createArtist = createAsyncThunk(
     "artists/createArtist",
     async (artistData) => {
-        try {
-            const response = await fetch("/artists", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(artistData),
-            });
-            const artist = await response.json();
-            return artist;
-        } catch (error) {
-            const errorResponse = await error.response.json();
-            throw new Error(errorResponse.message);
+        const response = await fetch("/artists", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(artistData),
+        });
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            console.log(errorResponse.error)
+            return errorResponse.error;
         }
+        const artist = await response.json();
+        return artist;
     }
 );
 
