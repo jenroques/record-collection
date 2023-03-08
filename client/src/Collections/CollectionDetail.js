@@ -28,7 +28,7 @@ export const CollectionDetail = ({ collectionId }) => {
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <Grid container spacing={4} sx={{ width: 500 }}>
+                <Grid container spacing={4} >
                     <Grid item key={collectionId} >
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flexGrow: 1 }}>
