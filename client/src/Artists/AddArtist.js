@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
     createArtist,
@@ -14,25 +14,22 @@ import {
 
 const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist, setShouldFetchArtists }) => {
     const status = useSelector((state) => state.artists.status);
-    const error = useSelector((state) => state.artists.error);
     const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        if (status === "rejected") {
-            setOpen(true);
-        }
-    }, [status]);
+    const [error, setError] = useState(null)
 
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
-
         setOpen(false);
     };
+
+    if (status === "rejected") {
+        setOpen(true);
+    }
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -42,14 +39,20 @@ const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist, setShouldFetch
         setImageUrl(event.target.value);
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        dispatch(createArtist({ name, image_url: imageUrl }));
-        setIsEdited(isEdited);
-        setName("");
-        setImageUrl("");
-        handleCloseAddArtist();
-        setShouldFetchArtists(true);
+        try {
+            await dispatch(createArtist({ name, image_url: imageUrl }));
+            setIsEdited(isEdited);
+            setName("");
+            setImageUrl("");
+            handleCloseAddArtist();
+            setShouldFetchArtists(true);
+        } catch (error) {
+            console.log("Submit Error:", error.message)
+            setError(error.message)
+            setOpen(true);
+        }
     };
 
     return (
@@ -83,7 +86,7 @@ const AddArtist = ({ setIsEdited, isEdited, handleCloseAddArtist, setShouldFetch
                     </Button>
                 </Grid>
             </Grid>
-            {error && open && (
+            {error && (
                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
                     <Alert severity="error">{error}</Alert>
                 </Snackbar>
