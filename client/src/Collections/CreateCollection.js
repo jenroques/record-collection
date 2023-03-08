@@ -16,7 +16,7 @@ const CreateCollection = ({ setIsEdited, isEdited, handleCloseAddCollection }) =
     const [name, setName] = useState("");
 
     console.log(name)
-    console.log(currentUser.user.id)
+    console.log(currentUser.id)
 
 
     const handleNameChange = (e) => {
@@ -26,7 +26,7 @@ const CreateCollection = ({ setIsEdited, isEdited, handleCloseAddCollection }) =
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("dispatching createCollection action");
-        dispatch(createCollection({ name, user_id: currentUser.user.id }));
+        dispatch(createCollection({ name, user_id: currentUser.id }));
         setIsEdited(!isEdited)
         setName("");
         handleCloseAddCollection();

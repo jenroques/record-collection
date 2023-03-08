@@ -22,7 +22,7 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord, setShouldFetch
     const [imageUrl, setImageUrl] = useState("");
     const [collectionId, setCollectionId] = useState(0);
 
-    console.log(currentUser.user.id);
+    console.log(currentUser.id);
     console.log(title)
     console.log("imageUrl:", imageUrl)
     console.log(collectionId)
@@ -43,8 +43,8 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord, setShouldFetch
         e.preventDefault();
         console.log("dispatching createRecord action");
         console.log("imageUrl:", imageUrl)
-        console.log("currentUser.id", currentUser.user.id)
-        dispatch(createRecord({ title, image_url: imageUrl, user_id: currentUser.user.id, collection_id: collectionId }));
+        console.log("currentUser.id", currentUser.id)
+        dispatch(createRecord({ title, image_url: imageUrl, user_id: currentUser.id, collection_id: collectionId }));
         setIsEdited(!isEdited);
         setShouldFetchRecords(true);
         setTitle("");
@@ -52,7 +52,7 @@ const AddRecord = ({ setIsEdited, isEdited, handleCloseAddRecord, setShouldFetch
         handleCloseAddRecord();
     };
 
-    const filteredCollections = collections.filter(collection => collection.user_id === currentUser.user.id);
+    const filteredCollections = collections.filter(collection => collection.user_id === currentUser.id);
 
     return (
         <form onSubmit={handleSubmit}>
