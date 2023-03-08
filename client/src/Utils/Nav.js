@@ -55,7 +55,7 @@ const Nav = () => {
 
     return (
         <AppBar position="static" sx={{ backgroundColor: '#f6f8f9' }}>
-            <Container maxWidth="xl">
+            <Container maxWidth="xxl">
                 <Toolbar disableGutters>
                     <Link to="/welcome" sx={{
                         position: 'fixed',
