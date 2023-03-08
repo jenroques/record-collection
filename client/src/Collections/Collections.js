@@ -13,7 +13,7 @@ import CollectionDetail from './CollectionDetail';
 import CloseIcon from '@mui/icons-material/Close';
 import MapsUgcIcon from '@mui/icons-material/MapsUgc';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
+import Collects from '../Assets/collects.png'
 
 
 const theme = createTheme();
@@ -109,25 +109,30 @@ export const Collections = () => {
                         overflow: 'auto',
                     }}
                 >
-                    <Container sx={{ display: 'flex', py: 0 }} maxWidth="md">
-                        <TextField
-                            sx={{
-                                mt: 5,
-                                mr: 5,
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            label="Search"
-                            variant="standard"
-                            value={searchQuery}
-                            fullWidth
-                            onChange={(event) => setSearchQuery(event.target.value)}
-                        />
+
+
+                    <Container sx={{ display: 'flex', py: 0 }} maxWidth="l">
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item>
+                                <img src={Collects} alt="Logo" width="400" height="150" />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    label="Search"
+                                    variant="standard"
+                                    value={searchQuery}
+                                    fullWidth
+                                    onChange={(event) => setSearchQuery(event.target.value)}
+                                />
+                            </Grid>
+                        </Grid>
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
                         <Grid container spacing={4}>
@@ -156,7 +161,7 @@ export const Collections = () => {
                                             )}
                                         </CardContent>
                                         <CardActions>
-                                            {currentUser && currentUser.user.id === collection.user_id && collection.records.length === 0 && (
+                                            {currentUser && currentUser.id === collection.user_id && collection.records.length === 0 && (
                                                 <>
                                                     <Tooltip title="Delete">
                                                         <IconButton onClick={handleDeleteOpen}>
@@ -180,7 +185,7 @@ export const Collections = () => {
                                                     </Dialog>
                                                 </>
                                             )}
-                                            {currentUser && currentUser.user.id === collection.user_id && (
+                                            {currentUser && currentUser.id === collection.user_id && (
                                                 <>
                                                     <Tooltip title="Edit Collection">
                                                         <IconButton onClick={() => handleEditOpen(collection.id)}>
@@ -200,7 +205,7 @@ export const Collections = () => {
                                                     </Dialog>
                                                 </>
                                             )}
-                                            {currentUser && currentUser.user.id === collection.user_id && userState.find(user => user.id === currentUser.user.id).records.length > 0 && (
+                                            {currentUser && currentUser.id === collection.user_id && userState.find(user => user.id === currentUser.id).records.length > 0 && (
                                                 <>
                                                     <Tooltip title="Add a Record">
                                                         <IconButton onClick={() => handleAddOpen(collection.id)}>
@@ -249,6 +254,7 @@ export const Collections = () => {
                 </Box>
             </Box>
         </ThemeProvider>
+
     );
 
 }
