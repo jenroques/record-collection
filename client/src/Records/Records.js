@@ -53,8 +53,9 @@ export const Records = () => {
     };
 
     const handleDeleteOpen = (record) => {
+        console.log('record to delete:', record)
         setDeleteOpen(true);
-        setEditRecordId(record);
+        setEditRecordId(record.id);
     };
 
     const handleDetailOpen = (recordId) => {
@@ -70,9 +71,8 @@ export const Records = () => {
         setIsEdited(!isEdited)
     }
 
-    const handleDelete = (record) => {
-        console.log(record.id)
-        dispatch(deleteRecord(record.id));
+    const handleDelete = () => {
+        dispatch(deleteRecord(editRecordId));
         setIsEdited(!isEdited);
         setShouldFetchRecords(true);
         handleClose();
@@ -158,7 +158,7 @@ export const Records = () => {
 
 
                                                         <Tooltip title="Delete">
-                                                            <IconButton onClick={handleDeleteOpen}>
+                                                            <IconButton onClick={() => handleDeleteOpen(record)}>
                                                                 <DeleteForeverIcon />
                                                             </IconButton>
                                                         </Tooltip>
