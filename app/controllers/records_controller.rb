@@ -63,19 +63,11 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    if params.fetch(:record, {}).permit(:title, :image_url, :user_id, :collection_id).present?
-      params.require(:record).permit(:title, :image_url, :user_id, :collection_id)
-    else
-      params.permit(:title, :image_url, :user_id, :collection_id)
-    end
+    params.permit(:title, :image_url, :user_id, :collection_id)
   end
 
   def update_record_params
-    if params.fetch(:record, {}).permit(:title, :image_url).present?
-      params.require(:record).permit(:title, :image_url)
-    else
-      params.permit(:title, :image_url)
-    end
+    params.permit(:title, :image_url)
   end
 
 end
