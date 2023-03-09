@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 skip_before_action :authorize, only: [:index, :create]
+wrap_parameters false
 
 def index
   users = User.all
@@ -7,14 +8,20 @@ def index
 end
 
 def show
-  user = User.find(session[:user_id])
-  render json: { user: user, session_id: session.id }
+  user = find_user
+  render json: user
 end
 
 def create
   user = User.create!(user_params)
-  session[:user_id] = user.id
   render json: user, status: :created
+end
+
+
+def destroy
+  user = find_user
+  user.destroy
+  head :no_content
 end
 
 private

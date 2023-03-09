@@ -1,6 +1,6 @@
 class RecordsController < ApplicationController
   skip_before_action :authorize, only: [:show, :index, :create, :add_to_record]
-  wrap_parameters :record, include: [:title, artist_ids: [], artists: [:name]]
+  wrap_parameters false
 
   def index
     records = Record.where(user_id: current_user.id)
@@ -63,7 +63,7 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    params.permit(:title, :image_url, :user_id, :collection_id)
+    params.permit(:title, :image_url)
   end
 
   def update_record_params

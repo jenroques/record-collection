@@ -19,8 +19,8 @@ const theme = createTheme();
 
 export const Records = () => {
     const dispatch = useDispatch();
-    const records = useSelector((state) => state.records.records);
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const records = useSelector((state) => state.user.records);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const [isEdited, setIsEdited] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
@@ -31,8 +31,12 @@ export const Records = () => {
     const [shouldFetchRecords, setShouldFetchRecords] = useState(false);
 
     useEffect(() => {
+        setShouldFetchRecords(true);
+    }, []);
+
+    useEffect(() => {
         dispatch(fetchRecords());
-    }, [dispatch, isEdited, currentUser, editRecordId]);
+    }, [dispatch, isEdited, editRecordId, shouldFetchRecords]);
 
     useEffect(() => {
         if (shouldFetchRecords) {

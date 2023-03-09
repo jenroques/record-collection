@@ -19,7 +19,7 @@ const theme = createTheme();
 export const Artists = () => {
     const dispatch = useDispatch();
     const artists = useSelector((state) => state.artists.artists);
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const [addOpen, setAddOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [editArtistId, setEditArtistId] = useState(null);

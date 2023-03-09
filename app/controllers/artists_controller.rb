@@ -1,6 +1,6 @@
 class ArtistsController < ApplicationController
   skip_before_action :authorize, only: [:show, :index]
-  wrap_parameters :artist, include: [:name, :image_url, record_ids: []]
+  wrap_parameters false
 
 
   def index

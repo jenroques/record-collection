@@ -12,7 +12,7 @@ const theme = createTheme();
 
 export const Home = () => {
     const dispatch = useDispatch();
-    const records = useSelector((state) => state.records.records);
+    const records = useSelector((state) => state.user.records);
     const collections = useSelector((state) => state.collections.collections);
     const artists = useSelector((state) => state.artists.artists);
     const users = useSelector((state) => state.user.users);
@@ -113,13 +113,5 @@ export const Home = () => {
     );
 }
 
-const mapStateToProps = (state) => ({
 
-})
-
-const mapDispatchToProps = (dispatch) => ({
-
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default Home;

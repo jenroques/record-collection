@@ -164,8 +164,8 @@ export const Login = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    error: state.session.error,
-    isLoggedIn: state.session.isLoggedIn,
+    error: state.user.error,
+    isLoggedIn: state.user.isLoggedIn,
     isCreated: state.user.isCreated,
 })
 

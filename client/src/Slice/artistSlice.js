@@ -55,6 +55,7 @@ export const artistSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchArtists.fulfilled, (state, action) => {
+            console.log('fetchArtists.fulfilled:', action.payload);
             const artists = action.payload.map((artist) => {
                 const { id, ...rest } = artist;
                 return { ...rest, id };

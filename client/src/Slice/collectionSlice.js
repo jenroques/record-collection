@@ -43,6 +43,7 @@ export const collectionSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCollections.fulfilled, (state, action) => {
+            console.log('fetchCollections.fulfilled:', action.payload);
             const collections = action.payload.map((collection) => {
                 const { id, ...rest } = collection;
                 return { ...rest, id };
