@@ -17,10 +17,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_13_003144) do
   create_table "artists", force: :cascade do |t|
     t.string "name"
     t.string "image_url"
-    t.bigint "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["record_id"], name: "index_artists_on_record_id"
   end
 
   create_table "artists_records", id: false, force: :cascade do |t|
@@ -54,7 +52,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_13_003144) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "artists", "records"
   add_foreign_key "records", "collections"
   add_foreign_key "records", "users"
 end
