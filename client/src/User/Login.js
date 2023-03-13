@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import LogoVid from '../Assets/logovid.mp4';
 
-import { login, setIsCreated, clearError } from '../Action/actions';
+import { login, setIsCreated, clearError, fetchCurrentUser, setCurrentUser } from '../Action/actions';
 
 const theme = createTheme();
 
@@ -31,7 +31,7 @@ export const Login = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const credentials = { username, password };
-        dispatch(login(credentials))
+        await dispatch(login(credentials))
             .then(() => {
                 dispatch(setIsCreated(false));
                 history.push("/welcome");
@@ -164,8 +164,8 @@ export const Login = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    error: state.session.error,
-    isLoggedIn: state.session.isLoggedIn,
+    error: state.user.error,
+    isLoggedIn: state.user.isLoggedIn,
     isCreated: state.user.isCreated,
 })
 

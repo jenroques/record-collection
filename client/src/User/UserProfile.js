@@ -12,7 +12,7 @@ export const UserProfile = (props) => {
     const dispatch = useDispatch();
     const records = useSelector((state) => state.records.records);
     const collections = useSelector((state) => state.collections.collections);
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const currentUser = useSelector((state) => state.user.currentUser);
 
     useEffect(() => {
         dispatch(fetchRecords());

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 skip_before_action :authorize, only: [:index, :create]
+wrap_parameters false
 
 def index
   users = User.all
@@ -7,8 +8,8 @@ def index
 end
 
 def show
-  user = User.find(session[:user_id])
-  render json: { user: user, session_id: session.id }
+  user = current_user
+  render json: user.as_json(include: { records: { include: [:collection, :artists] } })
 end
 
 def create

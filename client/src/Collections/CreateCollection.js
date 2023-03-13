@@ -12,7 +12,7 @@ import {
 
 const CreateCollection = ({ setIsEdited, isEdited, handleCloseAddCollection }) => {
     const dispatch = useDispatch();
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const [name, setName] = useState("");
 
     console.log(name)
@@ -57,7 +57,7 @@ const CreateCollection = ({ setIsEdited, isEdited, handleCloseAddCollection }) =
     );
 };
 const mapStateToProps = (state) => {
-    const currentUser = state.session.currentUser
+    const currentUser = state.user.currentUser
     return { currentUser }
 };
 

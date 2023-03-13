@@ -1,8 +1,9 @@
 class CollectionsController < ApplicationController
+  skip_before_action :authorize, only: [:index]
 
   def index
-    collections = Collection.all
-    render json: collections
+    collections = Collection.includes(:records)
+    render json: collections, include: [:records]
   end
 
   def show
@@ -42,7 +43,7 @@ class CollectionsController < ApplicationController
   end
 
   def collection_params
-    params.require(:collection).permit(:id, :name, :user_id,)
+    params.require(:collection).permit(:id, :name)
   end
 
 end

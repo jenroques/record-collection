@@ -1,7 +1,6 @@
 class ArtistsController < ApplicationController
-  skip_before_action :authorize, only: [:show, :index]
-  wrap_parameters :artist, include: [:name, :image_url, record_ids: []]
-
+  skip_before_action :authorize, only: [:show, :index, :destroy]
+  wrap_parameters false
 
   def index
     artists = Artist.all
@@ -42,7 +41,7 @@ class ArtistsController < ApplicationController
   end
 
   def artist_params
-    params.require(:artist).permit(:id, :name, :image_url, record_ids: [])
+    params.permit(:id, :name, :image_url, :records_id)
   end
 
 

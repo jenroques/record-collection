@@ -32,10 +32,9 @@ export const login = createAsyncThunk("session/login", async (credentials) => {
             const error = await response.json();
             throw new Error(error.error[0]);
         }
-        const { user, session_id } = await response.json();
-        localStorage.setItem("sessionId", session_id);
+        const user = await response.json();
         console.log("login response: ", user);
-        return { user, session_id };
+        return user;
     } catch (error) {
         console.log("Error:", error);
         return Promise.reject(error);
@@ -144,15 +143,15 @@ export const fetchRecordById = createAsyncThunk(
 
 export const createRecord = createAsyncThunk(
     "records/createRecord",
-    async ({ title, image_url, user_id, collection_id }) => {
+    async (recordData) => {
         try {
-            console.log("Sending createRecord request:", { title, image_url, user_id, collection_id });
+            console.log("Sending createRecord request:", recordData);
             const response = await fetch("/records", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ title, image_url, user_id, collection_id }),
+                body: JSON.stringify(recordData),
             });
             const data = await response.json();
             console.log("createRecord response:", data);
@@ -163,7 +162,6 @@ export const createRecord = createAsyncThunk(
         }
     }
 );
-
 
 
 export const editRecord = createAsyncThunk(
@@ -276,17 +274,6 @@ export const addRecordToCollection = createAsyncThunk(
     }
 );
 
-
-// export const deleteRecordFromCollection = createAsyncThunk(
-//     "collections/deleteRecordFromCollection",
-//     async ({ recordId, collectionId }) => {
-//         const response = await fetch(`/deletefromrecord`, {
-//             method: "DELETE",
-//         });
-//         const data = await response.json();
-//         return data;
-//     }
-// );
 
 // ARTISTS
 

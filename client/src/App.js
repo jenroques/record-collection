@@ -10,33 +10,24 @@ import SignUp from './User/SignUp';
 import Login from './User/Login';
 import Home from './Utils/Home';
 import Nav from './Utils/Nav';
-import { authenticate } from "./Action/actions";
+
+import { fetchRecords, fetchCollections, fetchArtists, fetchUsers } from '../src/Action/actions';
 
 function App() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.session.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const recordCreated = useSelector((state) => state.user.recordCreated);
+
+  console.log("Current User In App", currentUser)
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-    if (sessionId) {
-      dispatch(authenticate())
-        .then(() => {
-          console.log("Successfully authenticated");
-        })
-        .catch((error) => {
-          console.log("Authentication failed:", error.message);
-        });
+    if (currentUser) {
+      dispatch(fetchRecords());
+      dispatch(fetchCollections());
+      dispatch(fetchArtists());
     }
-    const handleBeforeUnload = () => {
-      if (!isLoggedIn) {
-        localStorage.removeItem("sessionId");
-      }
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [dispatch, isLoggedIn]);
+  }, [currentUser, dispatch, recordCreated]);
 
   return (
     <BrowserRouter>

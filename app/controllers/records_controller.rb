@@ -1,20 +1,56 @@
 class RecordsController < ApplicationController
-  skip_before_action :authorize, only: [:show, :index, :create, :add_to_record]
-  wrap_parameters :record, include: [:title, artist_ids: [], artists: [:name]]
+  skip_before_action :authorize, only: [:show, :index, :create, :add_to_record, :destroy]
+  wrap_parameters false
 
   def index
-    records = Record.where(user_id: current_user.id)
+    records = current_user.records
     render json: records
   end
 
   def show
     record = find_record
-    render json: record
+    render json: record.as_json(include: { artists: { only: :name } })
   end
 
   def create
-    record = Record.create(record_params)
-    render json: record, status: :created
+    collection_id = record_params[:collection_id]
+    collection_name = record_params[:collection_name]
+    artist_id = record_params[:artist_id]
+    artist_name = record_params[:artist_name]
+    artist_image = record_params[:artist_image]
+
+    if collection_id.blank? && collection_name.present?
+      collection = Collection.create(name: collection_name)
+      collection_id = collection.id
+    elsif collection_id.present? && Collection.exists?(id: collection_id)
+      # If a collection ID is provided and it exists in the database, use it
+      # Note that we don't need to set `collection_name` since it's not used anymore
+      collection_name = nil
+    else
+      # Return an error if a collection ID is provided but it doesn't exist in the database
+      return render json: { errors: ['Invalid collection ID'] }, status: :unprocessable_entity
+    end
+
+    record = current_user.records.new(record_params.except(:collection_name, :artist_name, :artist_id, :artist_image))
+    record.collection_id = collection_id
+
+
+    if record.save
+      if artist_id.blank? && artist_name.present?
+        artist = Artist.create(name: artist_name, image_url: artist_image)
+        artist_id = artist.id
+        artist.records << record
+
+      elsif artist_id.present?
+        artist = Artist.find(artist_id)
+        artist.records << record
+      end
+
+      render json: record, status: :created
+
+    else
+      render json: { errors: record.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def update
@@ -39,23 +75,6 @@ class RecordsController < ApplicationController
     end
   end
 
-  def add_to_record
-    record = find_record
-    record.artists << Artist.find_by(name: params[:name])
-    if record.save
-      render json: record
-    else
-      render json: { error: "Failed to add artist to record" }, status: :unprocessable_entity
-    end
-  end
-
-  def delete_from_record
-    record = find_record
-    artist = Artist.find(params[:artist_id])
-    record.artists.delete(artist)
-    render json: { message: "Artist has been removed from the record." }
-  end
-
   private
 
   def find_record
@@ -63,7 +82,7 @@ class RecordsController < ApplicationController
   end
 
   def record_params
-    params.permit(:title, :image_url, :user_id, :collection_id)
+    params.permit(:title, :image_url, :collection_id, :artist_id, :collection_name, :artist_name, :artist_image)
   end
 
   def update_record_params

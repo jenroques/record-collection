@@ -14,7 +14,7 @@ import { logout, setIsCreated } from "../Action/actions"
 const Nav = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const dispatch = useDispatch();
     const history = useHistory();
 

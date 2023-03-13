@@ -23,38 +23,33 @@ export const artistSlice = createSlice({
         createArtist: (state, action) => {
             state.artists.push(action.payload);
         },
-        deleteArtist: (state, action) => {
-            return {
-                ...state,
-                artists: state.artists.filter((artist) => artist.id !== action.payload.id),
-            };
-        },
-        editArtist: (state, action) => {
-            const updatedArtist = action.payload;
-            const index = state.artists.findIndex((artist) => artist.id === updatedArtist.id);
-            if (index !== -1) {
-                state.artists = [
-                    ...state.artists.slice(0, index),
-                    updatedArtist,
-                    ...state.artists.slice(index + 1),
-                ];
-            }
-        }, addArtistToRecord: (state, action) => {
-            const { id, name } = action.payload;
-            const artistIndex = state.artists.findIndex(artist => artist.name === name);
-            if (artistIndex === -1) {
-                // If the artist is not already in the array, add them as a new object
-                state.artists.push({ name: name, records: [id] });
-            } else {
-                // If the artist is already in the array, update their record list
-                state.artists = state.artists.map((artist, index) =>
-                    index === artistIndex ? { ...artist, records: [...artist.records, id] } : artist
-                );
-            }
-        },
+    }, addArtistToRecord: (state, action) => {
+        const { id, name } = action.payload;
+        const artistIndex = state.artists.findIndex(artist => artist.name === name);
+        if (artistIndex === -1) {
+            // If the artist is not already in the array, add them as a new object
+            state.artists.push({ name: name, records: [id] });
+        } else {
+            // If the artist is already in the array, update their record list
+            state.artists = state.artists.map((artist, index) =>
+                index === artistIndex ? { ...artist, records: [...artist.records, id] } : artist
+            );
+        }
+        const currentUserIndex = state.users.findIndex(user => user.id === state.currentUser.id);
+        if (currentUserIndex !== -1) {
+            state.users[currentUserIndex].records.push(id);
+        }
+    },
+    updateArtistRecords: (state, action) => {
+        const { artistName, recordId } = action.payload;
+        const index = state.findIndex((artist) => artist.name === artistName);
+        if (index !== -1) {
+            state[index].records.push(recordId);
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchArtists.fulfilled, (state, action) => {
+            console.log('fetchArtists.fulfilled:', action.payload);
             const artists = action.payload.map((artist) => {
                 const { id, ...rest } = artist;
                 return { ...rest, id };

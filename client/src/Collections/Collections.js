@@ -23,7 +23,7 @@ export const Collections = () => {
     const dispatch = useDispatch();
     const collections = useSelector((state) => state.collections.collections);
     const userState = useSelector(state => state.user.users || [])
-    const currentUser = useSelector((state) => state.session.currentUser);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const [editOpen, setEditOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -32,22 +32,8 @@ export const Collections = () => {
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        dispatch(fetchCollections());
-        console.log("Fetch Collections", collections)
-    }, [dispatch, isEdited, currentUser, userState]);
-
-    useEffect(() => {
-        dispatch(fetchUsers());
-        console.log("Fetch Users", userState)
-    }, [dispatch, isEdited, currentUser]);
-
-    useEffect(() => {
-        if (userState.length === 0) {
-        } else {
-            console.log("UserState:", userState);
-        }
-    }, [userState]);
+    console.log("Current User", currentUser)
+    console.log("collections", collections)
 
 
     const handleEditOpen = (collectionId) => {
@@ -84,13 +70,9 @@ export const Collections = () => {
         handleClose();
     };
 
-    const filteredCollections = collections.filter((collection) =>
+    const filteredCollections = currentUser.collections.filter((collection) =>
         collection.name.toLowerCase().includes(searchQuery.toLowerCase())
     ).sort((a, b) => a.id - b.id)
-    const usernames = filteredCollections.map((collection) => {
-        const user = userState.find(user => user.id === collection.user_id);
-        return user ? user.username : '';
-    });
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
@@ -144,21 +126,21 @@ export const Collections = () => {
                                                 {collection.name}
                                             </Typography>
                                             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                                                Created by: {usernames[index]}
+                                                Created by: {currentUser.username}
                                             </Typography>
                                             <Divider />
                                             <Typography gutterBottom variant="h6" component="h6" sx={{ mt: 2 }}>
                                                 Records:
                                             </Typography>
-                                            {collection.records.length > 0 ? (
-                                                collection.records.map((record) => (
+                                            {/* {currentUser.records.length > 0 ? (
+                                                currentUser.records.map((record) => (
                                                     <>
                                                         <Typography key={record.id}>{record.title}</Typography>
                                                     </>
                                                 ))
                                             ) : (
                                                 <Typography>No Records Currently in Collection</Typography>
-                                            )}
+                                            )} */}
                                         </CardContent>
                                         <CardActions>
                                             {currentUser && currentUser.id === collection.user_id && collection.records.length === 0 && (
@@ -260,7 +242,7 @@ export const Collections = () => {
 }
 
 const mapStateToProps = (state) => {
-    const currentUser = state.session.currentUser
+    const currentUser = state.user.currentUser
     return { currentUser }
 };
 

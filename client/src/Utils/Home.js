@@ -5,43 +5,35 @@ import { CssBaseline, Box, Card, CardContent, Grid, Container, Typography } from
 
 import WelcomeRC from '../Assets/welcomerc.png'
 import SideNav from '../Utils/SideNav';
-import { fetchRecords, fetchCollections, fetchArtists, fetchUsers } from '../Action/actions';
 
 const theme = createTheme();
 
 
 export const Home = () => {
     const dispatch = useDispatch();
-    const records = useSelector((state) => state.records.records);
+    const records = useSelector((state) => state.user.records);
     const collections = useSelector((state) => state.collections.collections);
     const artists = useSelector((state) => state.artists.artists);
-    const users = useSelector((state) => state.user.users);
+    const currentUser = useSelector((state) => state.user.currentUser)
 
+    console.log(currentUser)
 
-    useEffect(() => {
-        dispatch(fetchRecords());
-        dispatch(fetchCollections());
-        dispatch(fetchArtists());
-        dispatch(fetchUsers());
-    }, [dispatch]);
-
-    console.log(users)
 
     const recordCounts = {};
 
-    users.forEach((user) => {
-        const recordCount = user.records.filter(record => record.user_id === user.id).length;
-        recordCounts[user.id] = recordCount;
-    });
+    // users.forEach((user) => {
+    //     const recordCount = user.records.filter(record => record.user_id === user.id).length;
+    //     recordCounts[user.id] = recordCount;
+    // });
 
-    const topUserId = Object.keys(recordCounts).reduce((a, b) => recordCounts[a] > recordCounts[b] ? a : b);
+    // const topUserId = Object.keys(recordCounts).reduce((a, b) => recordCounts[a] > recordCounts[b] ? a : b);
 
-    const topUser = users.find(user => user.id === parseInt(topUserId));
+    // const topUser = users.find(user => user.id === parseInt(topUserId));
 
-    const totalArtists = artists.length;
-    const totalCollections = collections.reduce((total, collection) => {
-        return total + collection.records.length;
-    }, 0);
+    // const totalArtists = artists.length;
+    // const totalCollections = collections.reduce((total, collection) => {
+    //     return total + collection.records.length;
+    // }, 0);
 
     return (
         <ThemeProvider theme={theme}>
@@ -94,12 +86,12 @@ export const Home = () => {
                                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <br />
-                                                <Typography variant="h4" gutterBottom> Collector Community Stats:  </Typography>
+                                                {/* <Typography variant="h4" gutterBottom> Collector Community Stats:  </Typography>
                                                 <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> There are currently {totalCollections} total collections </Typography>
                                                 <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> There are currently {totalArtists} artists in the Artist Database </Typography>
                                                 <br />
                                                 <Typography variant="h4" gutterBottom> Record Collector's Stats: </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> Top user, {topUser.username} , currently has the most records added to their collections</Typography>
+                                                <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> Top user, {topUser.username} , currently has the most records added to their collections</Typography> */}
                                             </CardContent>
                                         </Card>
                                     </Box>

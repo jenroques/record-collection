@@ -16,7 +16,7 @@ import {
 const AddRecord = ({ setIsEdited, isEdited, handleClose, collectionId }) => {
     const dispatch = useDispatch();
     const records = useSelector((state) => state.records.records);
-    const currentUser = useSelector((state) => state.session.currentUser)
+    const currentUser = useSelector((state) => state.user.currentUser)
     const [recordId, setRecordId] = useState(null);
 
 

@@ -14,10 +14,8 @@ import {
     REGISTER,
 } from "redux-persist";
 
-import { sessionSlice } from '../Slice/sessionSlice'
 import { userSlice } from '../Slice/userSlice'
 import { collectionSlice } from '../Slice/collectionSlice'
-import { recordSlice } from '../Slice/recordSlice'
 import { artistSlice } from '../Slice/artistSlice'
 
 
@@ -25,11 +23,9 @@ import storage from "redux-persist/lib/storage";
 
 
 const rootReducer = combineReducers({
-    records: recordSlice.reducer,
     collections: collectionSlice.reducer,
     artists: artistSlice.reducer,
     user: userSlice.reducer,
-    session: sessionSlice.reducer,
 });
 
 const persistConfig = {

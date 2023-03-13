@@ -16,7 +16,7 @@ import {
 const AddToCollection = ({ setIsEdited, isEdited, handleClose, recordId }) => {
     const dispatch = useDispatch();
     const collections = useSelector((state) => state.collections.collections);
-    const currentUser = useSelector((state) => state.session.currentUser)
+    const currentUser = useSelector((state) => state.user.currentUser)
     const [collectionId, setCollectionId] = useState(null);
 
 

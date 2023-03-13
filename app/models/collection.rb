@@ -3,5 +3,5 @@ class Collection < ApplicationRecord
   has_many :users, through: :records
   has_many :artists, through: :records
 
-  validates :name, presence: :true
+  validates :name, presence: true
 end

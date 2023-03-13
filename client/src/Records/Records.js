@@ -19,27 +19,19 @@ const theme = createTheme();
 
 export const Records = () => {
     const dispatch = useDispatch();
-    const records = useSelector((state) => state.records.records);
-    const currentUser = useSelector((state) => state.session.currentUser);
     const [isEdited, setIsEdited] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [editRecordId, setEditRecordId] = useState(null);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [shouldFetchRecords, setShouldFetchRecords] = useState(false);
 
-    useEffect(() => {
-        dispatch(fetchRecords());
-    }, [dispatch, isEdited, currentUser, editRecordId]);
+    const records = useSelector((state) => state.user.records);
+    const currentUser = useSelector((state) => state.user.currentUser);
 
-    useEffect(() => {
-        if (shouldFetchRecords) {
-            dispatch(fetchRecords());
-            setShouldFetchRecords(false);
-        }
-    }, [dispatch, shouldFetchRecords, isEdited]);
+
+    console.log("currentUser records", currentUser)
+    console.log("records", records)
 
     const handleEditOpen = (recordId) => {
         setEditOpen(true);
@@ -74,20 +66,16 @@ export const Records = () => {
     const handleDelete = () => {
         dispatch(deleteRecord(editRecordId));
         setIsEdited(!isEdited);
-        setShouldFetchRecords(true);
         handleClose();
     };
 
 
-    const filteredRecords = records.filter((record) =>
-        record.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ).sort((a, b) => a.id - b.id);
     return (
-        <div key={records.length}>
+        <div>
             <ThemeProvider theme={theme}>
                 <Box sx={{ display: 'flex' }}>
                     <CssBaseline />
-                    <SideNav isEdited={isEdited} setIsEdited={setIsEdited} setShouldFetchRecords={setShouldFetchRecords} />
+                    <SideNav isEdited={isEdited} setIsEdited={setIsEdited} />
 
                     <Box
                         component="main"
@@ -108,30 +96,15 @@ export const Records = () => {
                                     <Grid item>
                                         <img src={Recs} alt="Logo" width="400" height="150" />
                                     </Grid>
-                                    <Grid item xs>
-                                        <TextField
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <SearchIcon />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Search"
-                                            variant="standard"
-                                            value={searchQuery}
-                                            fullWidth
-                                            onChange={(event) => setSearchQuery(event.target.value)}
-                                        />
-                                    </Grid>
+
                                 </Grid>
                             </Container>
                             <Container sx={{ py: 3 }} maxWidth="100%">
 
                                 <Grid container spacing={4}>
-                                    {filteredRecords.filter((record) => currentUser.id === record.user_id)
-                                        .map((record) => (
-                                            <Grid item key={record.id} xs={12} sm={6} md={8} lg={2}>
+                                    {records
+                                        .map((record, index) => (
+                                            <Grid item key={index} xs={12} sm={6} md={8} lg={2}>
                                                 <Card
                                                     sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                                                 >
@@ -144,17 +117,24 @@ export const Records = () => {
                                                             {record.title}
                                                         </Typography>
                                                         <Typography>
-                                                            {record.artists.map(artist => artist.name).join(', ')}
+                                                            {/* {record.artists.map(artist => artist.name).join(', ')} */}
                                                         </Typography>
                                                         <Divider />
                                                         <Typography gutterBottom variant='h6' component="h6" sx={{ mt: 2 }}>
                                                             Collections:
                                                         </Typography>
-                                                        <Typography>
-                                                            {record.collection && record.collection.name}
-                                                        </Typography>
+                                                        {/* {currentUser.records.map(record => {
+                                                            const collection = currentUser.collections.find(c => c.id === record.collection_id);
+                                                            const collectionName = collection ? collection.name : 'unknown';
+                                                            return (
+                                                                <Typography key={record}>{collectionName}</Typography>
+                                                            );
+                                                        })} */}
+                                                        {/* <Typography>
+                                                            {currentUser.records.collection_id === currentUser.collections.id}
+                                                        </Typography> */}
                                                     </CardContent>
-                                                    <CardActions>
+                                                    {/* <CardActions>
 
 
                                                         <Tooltip title="Delete">
@@ -197,25 +177,8 @@ export const Records = () => {
                                                             </DialogActions>
                                                         </Dialog>
 
-                                                        <Tooltip title="Add To Collection">
-                                                            <IconButton onClick={() => handleAddOpen(record.id)}>
-                                                                <AddCircleIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Dialog open={addOpen} onClose={handleClose}>
-                                                            <DialogContent>
-                                                                <AddToCollection recordId={editRecordId} records={records} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
-                                                            </DialogContent>
-                                                            <DialogActions>
-                                                                <Tooltip title="Cancel">
-                                                                    <IconButton onClick={handleClose}>
-                                                                        <CloseIcon />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                            </DialogActions>
-                                                        </Dialog>
 
-                                                        <Tooltip title="Record Details">
+                                                       <Tooltip title="Record Details">
                                                             <IconButton onClick={() => handleDetailOpen(record.id)}>
                                                                 <MoreHorizIcon />
                                                             </IconButton>
@@ -232,7 +195,7 @@ export const Records = () => {
                                                                 </Tooltip>
                                                             </DialogActions>
                                                         </Dialog>
-                                                    </CardActions>
+                                                    </CardActions> */}
                                                 </Card>
                                             </Grid>
                                         ))}
