@@ -14,8 +14,14 @@ end
 
 def create
   user = User.create!(user_params)
-  session[:user_id] = user.id
   render json: user, status: :created
+end
+
+
+def destroy
+  user = find_user
+  user.destroy
+  head :no_content
 end
 
 private

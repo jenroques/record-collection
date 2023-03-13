@@ -43,14 +43,14 @@ export const login = createAsyncThunk("session/login", async (credentials) => {
 
 export const logout = createAsyncThunk(
     "session/logout",
-    async (_, { dispatch }) => {
+    async () => {
         const response = await fetch('/logout', {
             method: 'DELETE',
         });
         if (!response.ok) {
             throw new Error('Failed to logout');
         }
-        localStorage.removeItem('sessionId');
+        localStorage.removeItem("currentUser");
         return null;
     });
 
@@ -58,8 +58,8 @@ export const authenticate = createAsyncThunk(
     "session/authenticate",
     async () => {
         try {
-            const sessionId = localStorage.getItem("sessionId");
-            if (!sessionId) {
+            const loggedInUser = localStorage.getItem("currentUser");
+            if (!loggedInUser) {
                 throw new Error("No sessionId found");
             }
             const response = await fetch("/me", {
@@ -102,13 +102,14 @@ export const fetchUserById = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
     "users/createUser",
-    async (userData) => {
+    async ({ username, password, password_confirmation }) => {
+        console.log({ username, password, password_confirmation });
         const response = await fetch("/users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(userData),
+            body: JSON.stringify({ username, password, password_confirmation }),
         });
 
         if (!response.ok) {
