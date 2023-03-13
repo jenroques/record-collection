@@ -5,22 +5,16 @@ import { Alert, CssBaseline, Box, Card, CardContent, Grid, Container, Typography
 import Profile from '../Assets/profile.png'
 import SideNav from '../Utils/SideNav';
 import { fetchRecords, fetchCollections, fetchArtists } from '../Action/actions';
+import { current } from '@reduxjs/toolkit';
 
 const theme = createTheme();
 
-export const UserProfile = (props) => {
-    const dispatch = useDispatch();
-    const records = useSelector((state) => state.records.records);
+export const UserProfile = () => {
+    const records = useSelector((state) => state.user.records);
     const collections = useSelector((state) => state.collections.collections);
     const currentUser = useSelector((state) => state.user.currentUser);
 
-    useEffect(() => {
-        dispatch(fetchRecords());
-    }, [dispatch]);
-
-    useEffect(() => {
-        dispatch(fetchCollections());
-    }, [dispatch])
+    console.log(currentUser)
 
     const collectionsWithRecordCounts = collections.map(collection => ({
         ...collection,
@@ -64,7 +58,7 @@ export const UserProfile = (props) => {
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <Box>
                                                     <Typography variant="h3" gutterBottom>
-                                                        Welcome, {currentUser.username}
+                                                        Welcome,
                                                     </Typography>
                                                     <Typography variant="h5" gutterBottom>
                                                         You currently have {totalCollections} collections.

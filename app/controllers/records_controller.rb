@@ -34,8 +34,11 @@ class RecordsController < ApplicationController
     record = current_user.records.new(record_params.except(:collection_name, :artist_name, :artist_id, :artist_image))
     record.collection_id = collection_id
 
+    puts "Record before save: #{record.inspect}"
 
     if record.save
+      puts "Record after save: #{record.inspect}"
+
       if artist_id.blank? && artist_name.present?
         artist = Artist.create(name: artist_name, image_url: artist_image)
         artist_id = artist.id
