@@ -22,10 +22,10 @@ export const userSlice = createSlice({
         },
         createRecord: (state, action) => {
             const newRecord = action.payload.record;
-            const updatedRecords = [...state.records, newRecord]; // add new record to state.records array
+            const updatedRecords = [...state.records, newRecord];
             const updatedUser = {
                 ...state.currentUser,
-                records: [...state.currentUser.records, newRecord], // add new record to currentUser.records array
+                records: updatedRecords,
             };
             state.records = updatedRecords;
             state.currentUser = updatedUser;

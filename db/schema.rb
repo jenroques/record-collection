@@ -10,17 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_11_235609) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_13_003912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "artists", force: :cascade do |t|
     t.string "name"
     t.string "image_url"
-    t.bigint "records_id", null: false
+    t.bigint "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["records_id"], name: "index_artists_on_records_id"
+    t.index ["record_id"], name: "index_artists_on_record_id"
+  end
+
+  create_table "artists_records", id: false, force: :cascade do |t|
+    t.bigint "record_id", null: false
+    t.bigint "artist_id", null: false
+    t.index ["artist_id", "record_id"], name: "index_artists_records_on_artist_id_and_record_id"
+    t.index ["record_id", "artist_id"], name: "index_artists_records_on_record_id_and_artist_id"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -47,6 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_11_235609) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "artists", "records"
   add_foreign_key "records", "collections"
   add_foreign_key "records", "users"
 end

@@ -3,5 +3,4 @@ class UserSerializer < ActiveModel::Serializer
 
   has_many :records
   has_many :collections, through: :records
-
 end

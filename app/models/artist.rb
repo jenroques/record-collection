@@ -1,3 +1,3 @@
 class Artist < ApplicationRecord
-  belongs_to :records
+  has_and_belongs_to_many :records, join_table: :artists_records
 end
