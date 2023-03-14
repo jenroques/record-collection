@@ -152,7 +152,7 @@ const SideNav = ({ setIsEdited, isEdited, setShouldFetchArtists, setShouldFetchR
                                 <Divider sx={{ my: 1 }} />
                             </>
                         )}
-                        {location.pathname === "/artists" && (
+                        {/* {location.pathname === "/artists" && (
                             <>
                                 <IconButton onClick={handleOpenAddArtist}>
                                     <PersonAddIcon alt="Artist Icon" style={{ position: 'sticky', width: '40px', height: '40px', marginLeft: "4px" }} />
@@ -171,7 +171,7 @@ const SideNav = ({ setIsEdited, isEdited, setShouldFetchArtists, setShouldFetchR
                                 <UtilityDialog open={openAddCollection} onClose={handleCloseAddCollection} dialogContent={<CreateCollection setIsEdited={setIsEdited} isEdited={isEdited} handleCloseAddCollection={handleCloseAddCollection} />} title="Create Collection" />
                                 <Divider sx={{ my: 1 }} />
                             </>
-                        )}
+                        )} */}
                     </List>
                     <List component="nav" sx={{ mt: 14 }}>
                         <Divider sx={{ my: 1 }} />

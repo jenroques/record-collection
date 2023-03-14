@@ -25,8 +25,6 @@ export const UserProfile = () => {
         return curr.recordCount > acc.recordCount ? curr : acc;
     }, { recordCount: 0 });
 
-    const totalCollections = collections.filter(collection => collection.user_id === currentUser.id).length
-    const totalRecords = records.filter(record => record.user_id === currentUser.id).length;
 
     return (
         <ThemeProvider theme={theme}>
@@ -58,13 +56,7 @@ export const UserProfile = () => {
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <Box>
                                                     <Typography variant="h3" gutterBottom>
-                                                        Welcome,
-                                                    </Typography>
-                                                    <Typography variant="h5" gutterBottom>
-                                                        You currently have {totalCollections} collections.
-                                                    </Typography>
-                                                    <Typography variant="h5" gutterBottom>
-                                                        You currently have {totalRecords} records.
+                                                        Welcome!
                                                     </Typography>
                                                 </Box>
                                             </CardContent>

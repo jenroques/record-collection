@@ -8,7 +8,7 @@ export const initialState = {
     isCreated: false,
     currentUser: null,
     records: [],
-    collections: [],
+    collections: []
 };
 
 export const userSlice = createSlice({

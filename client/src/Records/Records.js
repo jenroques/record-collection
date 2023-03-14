@@ -35,13 +35,12 @@ export const Records = () => {
     console.log("currentUser", currentUser)
     console.log("records", records)
 
-    // if (!currentUser) {
-    //     return <div>Loading...</div>;
-    // }
 
     useEffect(() => {
         if (isEdited, isDeleted) {
             dispatch(fetchRecords());
+            setIsEdited(false);
+            setIsDeleted(false);
         }
     }, [currentUser, dispatch, isEdited, isDeleted]);
 
@@ -69,13 +68,13 @@ export const Records = () => {
         setEditOpen(false);
         setDeleteOpen(false);
         setDetailOpen(false);
-        setIsEdited(!isEdited);
-        setIsDeleted(!isDeleted);
+        setIsEdited(true);
+        setIsDeleted(true);
     }
 
     const handleDelete = () => {
         dispatch(deleteRecord(editRecordId));
-        setIsDeleted(!isDeleted);
+        setIsDeleted(true);
         handleClose();
     };
 
