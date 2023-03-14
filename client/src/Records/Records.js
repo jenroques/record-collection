@@ -12,7 +12,6 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SideNav from '../Utils/SideNav';
 import RecordDetail from '../Records/RecordDetail';
 import Recs from '../Assets/recs.png'
-import AddToCollection from './AddToCollection';
 import EditRecord from '../Records/EditRecord';
 import { current } from '@reduxjs/toolkit';
 
@@ -132,16 +131,7 @@ export const Records = () => {
                                                         <Typography gutterBottom variant='h6' component="h6" sx={{ mt: 2 }}>
                                                             Collections:
                                                         </Typography>
-                                                        {records.map(record => {
-                                                            const collection = collections.find(c => c.id === record.collection_id);
-                                                            const collectionName = collection ? collection.name : 'unknown';
-                                                            return (
-                                                                <Typography key={record}>{collectionName}</Typography>
-                                                            );
-                                                        })}
-                                                        <Typography>
-                                                            {records.collection_id === collections.id}
-                                                        </Typography>
+                                                        <Typography>{record.collection.name}</Typography>
                                                     </CardContent>
                                                     <CardActions>
                                                         <Tooltip title="Delete">

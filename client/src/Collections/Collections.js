@@ -97,8 +97,8 @@ export const Collections = () => {
                                             <Typography gutterBottom variant="h6" component="h6" sx={{ mt: 2 }}>
                                                 Records:
                                             </Typography>
-                                            {records.length > 0 ? (
-                                                records.map((record) => (
+                                            {collection.records.length > 0 ? (
+                                                collection.records.map((record) => (
                                                     <>
                                                         <Typography key={record.id}>{record.title}</Typography>
                                                     </>
