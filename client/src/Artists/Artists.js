@@ -106,25 +106,7 @@ export const Artists = () => {
                                                 <Typography key={record.id}>{record.title}</Typography>
                                             ))}
                                         </CardContent>
-                                        <CardActions>
-                                            <Tooltip title="Edit Artist">
-                                                <IconButton onClick={() => handleEditOpen(artist)}>
-                                                    <EditIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Dialog open={editOpen} onClose={handleClose}>
-                                                <DialogContent>
-                                                    <EditArtist artistId={editArtistId} handleClose={handleClose} />
-                                                </DialogContent>
-                                                <DialogActions>
-                                                    <Tooltip title="Cancel">
-                                                        <IconButton onClick={handleClose}>
-                                                            <CloseIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </DialogActions>
-                                            </Dialog>
-                                        </CardActions>
+
                                     </Card>
                                 </Grid>
                             ))}

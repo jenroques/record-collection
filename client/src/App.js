@@ -17,7 +17,6 @@ function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const currentUser = useSelector((state) => state.user.currentUser);
-  const recordCreated = useSelector((state) => state.user.recordCreated);
 
   console.log("Current User In App", currentUser)
 
@@ -27,7 +26,7 @@ function App() {
       dispatch(fetchCollections());
       dispatch(fetchArtists());
     }
-  }, [currentUser, dispatch, recordCreated]);
+  }, [currentUser, dispatch]);
 
   return (
     <BrowserRouter>

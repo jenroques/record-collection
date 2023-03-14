@@ -1,5 +1,5 @@
 class CollectionsController < ApplicationController
-  skip_before_action :authorize, only: [:index]
+  skip_before_action :authorize, only: [:index, :destroy]
 
   def index
     collections = Collection.includes(:records)

@@ -14,13 +14,14 @@ import RecordDetail from '../Records/RecordDetail';
 import Recs from '../Assets/recs.png'
 import AddToCollection from './AddToCollection';
 import EditRecord from '../Records/EditRecord';
+import { current } from '@reduxjs/toolkit';
 
 const theme = createTheme();
 
 export const Records = () => {
     const dispatch = useDispatch();
     const [isEdited, setIsEdited] = useState(false);
-    const [addOpen, setAddOpen] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false)
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
@@ -28,44 +29,53 @@ export const Records = () => {
 
     const records = useSelector((state) => state.user.records);
     const currentUser = useSelector((state) => state.user.currentUser);
+    const collections = useSelector((state) => state.user.collections);
 
 
-    console.log("currentUser records", currentUser)
+    console.log("currentUser", currentUser)
     console.log("records", records)
 
-    const handleEditOpen = (recordId) => {
-        setEditOpen(true);
-        setEditRecordId(recordId);
-    };
+    // if (!currentUser) {
+    //     return <div>Loading...</div>;
+    // }
 
-    const handleAddOpen = (recordId) => {
-        setAddOpen(true);
-        setEditRecordId(recordId);
-        setIsEdited(!isEdited)
+    useEffect(() => {
+        if (isEdited, isDeleted) {
+            dispatch(fetchRecords());
+        }
+    }, [currentUser, dispatch, isEdited, isDeleted]);
+
+
+
+    const handleEditOpen = (record) => {
+        setEditOpen(true);
+        setEditRecordId(record.id);
+        console.log("Edit", record.id)
     };
 
     const handleDeleteOpen = (record) => {
         console.log('record to delete:', record)
         setDeleteOpen(true);
         setEditRecordId(record.id);
+        console.log("Delete", record.id)
     };
 
-    const handleDetailOpen = (recordId) => {
+    const handleDetailOpen = (record) => {
         setDetailOpen(true);
-        setEditRecordId(recordId)
+        setEditRecordId(record.id)
     };
 
     const handleClose = () => {
         setEditOpen(false);
         setDeleteOpen(false);
-        setAddOpen(false);
         setDetailOpen(false);
-        setIsEdited(!isEdited)
+        setIsEdited(!isEdited);
+        setIsDeleted(!isDeleted);
     }
 
     const handleDelete = () => {
         dispatch(deleteRecord(editRecordId));
-        setIsEdited(!isEdited);
+        setIsDeleted(!isDeleted);
         handleClose();
     };
 
@@ -117,26 +127,24 @@ export const Records = () => {
                                                             {record.title}
                                                         </Typography>
                                                         <Typography>
-                                                            {/* {record.artists.map(artist => artist.name).join(', ')} */}
+                                                            {record.artists.map(artist => artist.name).join(', ')}
                                                         </Typography>
                                                         <Divider />
                                                         <Typography gutterBottom variant='h6' component="h6" sx={{ mt: 2 }}>
                                                             Collections:
                                                         </Typography>
-                                                        {/* {currentUser.records.map(record => {
-                                                            const collection = currentUser.collections.find(c => c.id === record.collection_id);
+                                                        {records.map(record => {
+                                                            const collection = collections.find(c => c.id === record.collection_id);
                                                             const collectionName = collection ? collection.name : 'unknown';
                                                             return (
                                                                 <Typography key={record}>{collectionName}</Typography>
                                                             );
-                                                        })} */}
-                                                        {/* <Typography>
-                                                            {currentUser.records.collection_id === currentUser.collections.id}
-                                                        </Typography> */}
+                                                        })}
+                                                        <Typography>
+                                                            {records.collection_id === collections.id}
+                                                        </Typography>
                                                     </CardContent>
-                                                    {/* <CardActions>
-
-
+                                                    <CardActions>
                                                         <Tooltip title="Delete">
                                                             <IconButton onClick={() => handleDeleteOpen(record)}>
                                                                 <DeleteForeverIcon />
@@ -166,7 +174,7 @@ export const Records = () => {
                                                         </Tooltip>
                                                         <Dialog open={editOpen} onClose={handleClose}>
                                                             <DialogContent>
-                                                                <EditRecord recordId={editRecordId} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
+                                                                <EditRecord recordId={editRecordId} handleClose={handleClose} record={record} setIsEdited={setIsEdited} isEdited={isEdited} />
                                                             </DialogContent>
                                                             <DialogActions>
                                                                 <Tooltip title="Cancel">
@@ -178,14 +186,14 @@ export const Records = () => {
                                                         </Dialog>
 
 
-                                                       <Tooltip title="Record Details">
+                                                        <Tooltip title="Record Details">
                                                             <IconButton onClick={() => handleDetailOpen(record.id)}>
                                                                 <MoreHorizIcon />
                                                             </IconButton>
                                                         </Tooltip>
                                                         <Dialog open={detailOpen} onClose={handleClose}>
                                                             <DialogContent>
-                                                                <RecordDetail recordId={editRecordId} currentUser={currentUser} />
+                                                                <RecordDetail record={record} recordId={editRecordId} currentUser={currentUser} />
                                                             </DialogContent>
                                                             <DialogActions>
                                                                 <Tooltip title="Cancel">
@@ -195,7 +203,7 @@ export const Records = () => {
                                                                 </Tooltip>
                                                             </DialogActions>
                                                         </Dialog>
-                                                    </CardActions> */}
+                                                    </CardActions>
                                                 </Card>
                                             </Grid>
                                         ))}

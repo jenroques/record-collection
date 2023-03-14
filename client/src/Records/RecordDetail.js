@@ -8,28 +8,22 @@ import { fetchRecordById } from '../Action/actions';
 
 const theme = createTheme();
 
-export const RecordDetail = ({ recordId }) => {
-    const dispatch = useDispatch();
-    const currentRecord = useSelector((state) => state.records.currentRecord);
+export const RecordDetail = ({ record }) => {
     const [recordDetail, setRecordDetail] = useState([])
-    console.log(recordId)
+
 
     useEffect(() => {
-        dispatch(fetchRecordById(recordId));
-    }, [dispatch, recordId]);
+        setRecordDetail(record);
+    }, [record, setRecordDetail]);
 
-    useEffect(() => {
-        setRecordDetail(currentRecord);
-    }, [currentRecord, setRecordDetail]);
-
-    console.log(recordDetail);
+    console.log(record);
 
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <Grid container spacing={4} sx={{ width: 500 }}>
-                    <Grid item key={recordId} >
+                    <Grid item key={record.id} >
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardMedia component="img" image={recordDetail.image_url} width="50%" height="50%" alt="record_image" />
                             <CardContent sx={{ flexGrow: 1 }}>

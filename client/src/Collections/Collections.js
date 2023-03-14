@@ -21,58 +21,23 @@ const theme = createTheme();
 
 export const Collections = () => {
     const dispatch = useDispatch();
-    const collections = useSelector((state) => state.collections.collections);
-    const userState = useSelector(state => state.user.users || [])
-    const currentUser = useSelector((state) => state.user.currentUser);
-    const [editOpen, setEditOpen] = useState(false);
-    const [addOpen, setAddOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
-    const [detailOpen, setDetailOpen] = useState(false);
-    const [editCollectionId, setEditCollectionId] = useState(null);
+
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+
+    const collections = useSelector((state) => state.user.collections);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const records = useSelector((state) => state.user.records)
 
     console.log("Current User", currentUser)
     console.log("collections", collections)
 
+    useEffect(() => {
+        if (records) {
+            dispatch(fetchCollections());
+        }
+    }, [currentUser, dispatch, records]);
 
-    const handleEditOpen = (collectionId) => {
-        setEditOpen(true);
-        setEditCollectionId(collectionId);
-    };
-
-    const handleDeleteOpen = (collectionId) => {
-        setDeleteOpen(true);
-        setEditCollectionId(collectionId);
-    };
-
-    const handleDetailOpen = (collectionId) => {
-        setDetailOpen(true);
-        setEditCollectionId(collectionId)
-    }
-
-    const handleAddOpen = (collectionId) => {
-        setAddOpen(true);
-        setEditCollectionId(collectionId)
-    }
-
-    const handleClose = () => {
-        setEditOpen(false);
-        setDeleteOpen(false);
-        setDetailOpen(false);
-        setIsEdited(!isEdited);
-        setAddOpen(false);
-    };
-
-    const handleDelete = (collection) => {
-        dispatch(deleteCollection(collection.id));
-        setIsEdited(!isEdited);
-        handleClose();
-    };
-
-    const filteredCollections = currentUser.collections.filter((collection) =>
-        collection.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ).sort((a, b) => a.id - b.id)
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
@@ -118,8 +83,8 @@ export const Collections = () => {
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
                         <Grid container spacing={4}>
-                            {filteredCollections.map((collection, index) => (
-                                <Grid item key={collection.id} xs={12} sm={6} md={8} lg={2}>
+                            {collections.map((collection, index) => (
+                                <Grid item key={index} xs={12} sm={6} md={8} lg={2}>
                                     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <CardContent sx={{ flexGrow: 1 }}>
                                             <Typography gutterBottom variant="h5" component="h2">
@@ -132,102 +97,17 @@ export const Collections = () => {
                                             <Typography gutterBottom variant="h6" component="h6" sx={{ mt: 2 }}>
                                                 Records:
                                             </Typography>
-                                            {/* {currentUser.records.length > 0 ? (
-                                                currentUser.records.map((record) => (
+                                            {records.length > 0 ? (
+                                                records.map((record) => (
                                                     <>
                                                         <Typography key={record.id}>{record.title}</Typography>
                                                     </>
                                                 ))
                                             ) : (
                                                 <Typography>No Records Currently in Collection</Typography>
-                                            )} */}
+                                            )}
                                         </CardContent>
-                                        <CardActions>
-                                            {currentUser && currentUser.id === collection.user_id && collection.records.length === 0 && (
-                                                <>
-                                                    <Tooltip title="Delete">
-                                                        <IconButton onClick={handleDeleteOpen}>
-                                                            <DeleteForeverIcon />
-                                                        </IconButton>
-                                                    </Tooltip><Dialog open={deleteOpen} onClose={handleClose}>
-                                                        <DialogTitle>Delete Collection?</DialogTitle>
-                                                        <DialogContent>
-                                                            <DialogContentText>
-                                                                Are you sure you want to delete this Collection?
-                                                            </DialogContentText>
-                                                        </DialogContent>
-                                                        <DialogActions>
-                                                            <Button onClick={() => { handleDelete(collection); }}>Yes, Please Delete</Button>
-                                                            <Tooltip title="Cancel">
-                                                                <IconButton onClick={handleClose}>
-                                                                    <CloseIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </DialogActions>
-                                                    </Dialog>
-                                                </>
-                                            )}
-                                            {currentUser && currentUser.id === collection.user_id && (
-                                                <>
-                                                    <Tooltip title="Edit Collection">
-                                                        <IconButton onClick={() => handleEditOpen(collection.id)}>
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                    </Tooltip><Dialog open={editOpen} onClose={handleClose}>
-                                                        <DialogContent>
-                                                            <EditCollection collectionId={editCollectionId} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} />
-                                                        </DialogContent>
-                                                        <DialogActions>
-                                                            <Tooltip title="Cancel">
-                                                                <IconButton onClick={handleClose}>
-                                                                    <CloseIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </DialogActions>
-                                                    </Dialog>
-                                                </>
-                                            )}
-                                            {currentUser && currentUser.id === collection.user_id && userState.find(user => user.id === currentUser.id).records.length > 0 && (
-                                                <>
-                                                    <Tooltip title="Add a Record">
-                                                        <IconButton onClick={() => handleAddOpen(collection.id)}>
-                                                            <MapsUgcIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    <Dialog open={addOpen} onClose={handleClose}>
-                                                        <DialogContent>
-                                                            <AddToRecord collectionId={editCollectionId} currentUser={currentUser} handleClose={handleClose} setIsEdited={setIsEdited} isEdited={isEdited} collection={collection.name} />
-                                                        </DialogContent>
-                                                        <DialogActions>
-                                                            <Tooltip title="Cancel">
-                                                                <IconButton onClick={handleClose}>
-                                                                    <CloseIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </DialogActions>
-                                                    </Dialog>
-                                                </>
-                                            )}
-                                            <>
-                                                <Tooltip title="Collection Details">
-                                                    <IconButton onClick={() => handleDetailOpen(collection.id)}>
-                                                        <MoreHorizIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Dialog open={detailOpen} onClose={handleClose}>
-                                                    <DialogContent>
-                                                        <CollectionDetail collectionId={editCollectionId} currentUser={currentUser} />
-                                                    </DialogContent>
-                                                    <DialogActions>
-                                                        <Tooltip title="Cancel">
-                                                            <IconButton onClick={handleClose}>
-                                                                <CloseIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </DialogActions>
-                                                </Dialog>
-                                            </>
-                                        </CardActions>
+
                                     </Card>
                                 </Grid>
                             ))}
@@ -241,13 +121,4 @@ export const Collections = () => {
 
 }
 
-const mapStateToProps = (state) => {
-    const currentUser = state.user.currentUser
-    return { currentUser }
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    fetchUsers: () => dispatch(fetchUsers()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Collections)
+export default Collections;

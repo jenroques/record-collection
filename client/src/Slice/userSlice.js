@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUsers, fetchUserById, createUser, login, logout, authenticate, fetchRecords, fetchRecordById, createRecord } from "../Action/actions"
+import { fetchUsers, createUser, login, logout, fetchRecords, fetchCollections, createRecord, createCollection } from "../Action/actions"
 
 export const initialState = {
     users: [],
@@ -8,6 +8,7 @@ export const initialState = {
     isCreated: false,
     currentUser: null,
     records: [],
+    collections: [],
 };
 
 export const userSlice = createSlice({
@@ -30,12 +31,23 @@ export const userSlice = createSlice({
             state.records = updatedRecords;
             state.currentUser = updatedUser;
             state.recordCreated = true;
+
+            const { collection_id } = newRecord;
+            const collectionIndex = state.collections.findIndex((c) => c.id === collection_id);
+            console.log(state.collections)
+            if (collectionIndex !== -1) {
+                const recordIds = state.collections[collectionIndex].records;
+                if (!recordIds.includes(newRecord.id)) {
+                    state.collections[collectionIndex].records = [...recordIds, newRecord.id];
+                }
+            }
+            console.log(state.collections)
         },
         deleteRecord: (state, action) => {
             const deletedRecordId = action.payload;
             state.records = state.records.filter((record) => record.id !== deletedRecordId);
             if (state.currentUser) {
-                state.currentUser.records = state.currentUser.records.filter((id) => id !== deletedRecordId);
+                state.currentUser.records = state.currentUser.records.filter((record) => record.id !== deletedRecordId);
             }
             state.records.push()
         },
@@ -43,23 +55,9 @@ export const userSlice = createSlice({
             const updatedRecord = action.payload;
             const index = state.records.findIndex((record) => record.id === updatedRecord.id);
             if (index !== -1) {
-                state.records = [
-                    ...state.records.slice(0, index),
-                    updatedRecord,
-                    ...state.records.slice(index + 1),
-                ];
-                state.currentRecord = updatedRecord;
+                state.records[index] = updatedRecord;
             }
-        },
-        // addRecordToCollection: (state, action) => {
-        //     const { id, collection_id } = action.payload;
-        //     const recordIndex = state.currentUser.records.findIndex((r) => r.id === id);
-        //     const collectionIndex = state.currentUser.collections.findIndex((c) => c.id === collection_id);
-        //     if (recordIndex !== -1 && collectionIndex !== -1) {
-        //         state.currentUser.records[recordIndex].collection_id = collection_id;
-        //         state.currentUser.collections[collectionIndex].records.push(id);
-        //     }
-        // },
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
@@ -120,8 +118,51 @@ export const userSlice = createSlice({
                 records: updatedRecords,
             };
             state.currentUser = updatedUser;
-            state.recordCreated = true;
         })
+        builder.addCase(fetchCollections.fulfilled, (state, action) => {
+            console.log('fetchCollections.fulfilled:', action.payload);
+            const collections = action.payload.map((collection) => {
+                const { id, ...rest } = collection;
+                return { ...rest, id };
+            });
+            console.log('collections:', collections);
+            return { ...state, collections };
+        });
+        builder.addCase(createCollection.fulfilled, (state, action) => {
+            const newCollection = action.payload.collection;
+
+            // Push the new collection to the collections array
+            state.collections.push(newCollection);
+
+            // Update the collection_id of any records that belong to the new collection
+            const { records } = newCollection;
+            if (records && records.length > 0) {
+                const recordIds = records.map((r) => r.id);
+                state.records.forEach((record) => {
+                    if (recordIds.includes(record.id)) {
+                        record.collection_id = newCollection.id;
+                    }
+                });
+            }
+
+            // Update the collection_id of any records that already belong to a collection
+            // but are not included in the new collection
+            state.collections.forEach((collection) => {
+                if (collection.id !== newCollection.id) {
+                    const { records } = collection;
+                    if (records && records.length > 0) {
+                        const recordIds = records.map((r) => r.id);
+                        state.records.forEach((record) => {
+                            if (recordIds.includes(record.id)) {
+                                if (record.collection_id === newCollection.id) {
+                                    record.collection_id = null;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
     },
 });
 

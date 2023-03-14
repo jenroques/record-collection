@@ -23,11 +23,8 @@ class RecordsController < ApplicationController
       collection = Collection.create(name: collection_name)
       collection_id = collection.id
     elsif collection_id.present? && Collection.exists?(id: collection_id)
-      # If a collection ID is provided and it exists in the database, use it
-      # Note that we don't need to set `collection_name` since it's not used anymore
       collection_name = nil
     else
-      # Return an error if a collection ID is provided but it doesn't exist in the database
       return render json: { errors: ['Invalid collection ID'] }, status: :unprocessable_entity
     end
 
@@ -68,16 +65,6 @@ class RecordsController < ApplicationController
     head :no_content
   end
 
-  def add_to_collection
-    record = find_record
-    if record.collection_id == params[:collection_id].to_i
-      render json: { message: 'Record already in collection.' }, status: :unprocessable_entity
-    else
-      record.update(collection_id: params[:collection_id])
-      render json: { message: 'Record added to collection.' }, status: :ok
-    end
-  end
-
   private
 
   def find_record
@@ -89,7 +76,7 @@ class RecordsController < ApplicationController
   end
 
   def update_record_params
-    params.permit(:title, :image_url)
+    params.permit(:id, :title, :image_url)
   end
 
 end

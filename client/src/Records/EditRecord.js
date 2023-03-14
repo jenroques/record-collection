@@ -4,10 +4,13 @@ import { Grid, Button, Typography, TextField } from '@mui/material'
 
 import { editRecord } from '../Action/actions'
 
-export const EditRecord = ({ record, handleClose, isEdited, setIsEdited }) => {
+export const EditRecord = ({ record, recordId, handleClose, isEdited, setIsEdited }) => {
     const dispatch = useDispatch();
     const [title, setTitle] = useState(record ? record.title : '')
     const [imageUrl, setImageUrl] = useState(record ? record.image_url : '')
+
+    console.log("record", record)
+
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -22,7 +25,7 @@ export const EditRecord = ({ record, handleClose, isEdited, setIsEdited }) => {
         try {
             await dispatch(editRecord({ id: record.id, title, image_url: imageUrl }));
             handleClose();
-            setIsEdited(!isEdited)
+            setIsEdited(!isEdited);
         } catch (error) {
             console.log(error);
         }
@@ -65,13 +68,4 @@ export const EditRecord = ({ record, handleClose, isEdited, setIsEdited }) => {
     )
 }
 
-const mapStateToProps = (state, ownProps) => {
-    const record = state.records.records.find((record) => record.id === ownProps.recordId);
-    return { record };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    editRecord: (record) => dispatch(editRecord(record)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditRecord);
+export default EditRecord;

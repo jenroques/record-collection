@@ -14,12 +14,11 @@ import {
     MenuItem
 } from "@mui/material";
 
-
-
 function CreateRecord({ handleCloseAddRecord }) {
     const dispatch = useDispatch();
-    const artists = useSelector((state) => state.artists.artists)
-    const currentUser = useSelector((state) => state.user.currentUser)
+    const artists = useSelector((state) => state.artists.artists);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const collections = useSelector((state) => state.user.collections);
     const [title, setTitle] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [collectionId, setCollectionId] = useState(0);
@@ -148,7 +147,7 @@ function CreateRecord({ handleCloseAddRecord }) {
                             <FormControl>
                                 <Select value={collectionId} onChange={handleCollectionChange}>
                                     <MenuItem value={0}>-- Select an existing collection --</MenuItem>
-                                    {currentUser.collections.map((collection) => {
+                                    {collections.map((collection) => {
                                         return (
                                             <MenuItem key={collection.id} value={collection.id}>
                                                 {collection.name}
