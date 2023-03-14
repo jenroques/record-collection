@@ -36,7 +36,7 @@ export const Records = () => {
 
 
     useEffect(() => {
-        if (isEdited, isDeleted) {
+        if (isEdited, isDeleted, collections) {
             dispatch(fetchRecords());
             setIsEdited(false);
             setIsDeleted(false);
@@ -68,7 +68,6 @@ export const Records = () => {
         setDeleteOpen(false);
         setDetailOpen(false);
         setIsEdited(true);
-        setIsDeleted(true);
     }
 
     const handleDelete = () => {

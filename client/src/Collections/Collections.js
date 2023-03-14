@@ -33,8 +33,9 @@ export const Collections = () => {
     console.log("collections", collections)
 
     useEffect(() => {
-        if (records) {
+        if (isEdited, records) {
             dispatch(fetchCollections());
+            setIsEdited(false);
         }
     }, [currentUser, dispatch, records]);
 
