@@ -19,29 +19,19 @@ const theme = createTheme();
 export const Artists = () => {
     const dispatch = useDispatch();
     const artists = useSelector((state) => state.artists.artists);
+    const records = useSelector((state) => state.user.records);
     const currentUser = useSelector((state) => state.user.currentUser);
-    const [addOpen, setAddOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
-    const [editArtistId, setEditArtistId] = useState(null);
     const [isEdited, setIsEdited] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
 
-    const handleEditOpen = (artistId) => {
-        setEditOpen(true);
-        setEditArtistId(artistId);
-    };
+    useEffect(() => {
+        if (isEdited, records) {
+            dispatch(fetchArtists());
+            setIsEdited(false);
+        }
+    }, [currentUser, dispatch, isEdited, records]);
 
-    const handleAddOpen = (artistId) => {
-        setAddOpen(true);
-        setEditArtistId(artistId);
-    };
-
-    const handleClose = () => {
-        setEditOpen(false);
-        setAddOpen(false);
-        setIsEdited(!isEdited)
-    };
     console.log(artists)
     console.log("CurrentUser", currentUser)
 
