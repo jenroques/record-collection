@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { connect, useSelector } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Alert, CssBaseline, Box, Card, CardContent, Grid, Container, Typography, TextField, Button } from '@mui/material';
+import { CssBaseline, Box, Card, CardContent, Grid, Container, Typography, TextField, Button } from '@mui/material';
 import Profile from '../Assets/profile.png'
 import SideNav from '../Utils/SideNav';
-import { fetchRecords, fetchCollections, fetchArtists } from '../Action/actions';
-import { current } from '@reduxjs/toolkit';
 
 const theme = createTheme();
 
@@ -46,7 +44,7 @@ export const UserProfile = () => {
                     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <img src={Profile} alt="Logo" width="300" height="100" />
+                                <img src={Profile} alt="Logo" width="350" height="150" />
                             </Grid>
 
                             <Grid item xs={12}>

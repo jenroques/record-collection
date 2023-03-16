@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Card, CardContent, Grid, Container, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 import WelcomeRC from '../Assets/welcomerc.png'
 import SideNav from '../Utils/SideNav';
@@ -19,12 +20,10 @@ export const Home = () => {
     console.log(currentUser)
 
 
-    const recordCounts = {};
 
-    // users.forEach((user) => {
-    //     const recordCount = user.records.filter(record => record.user_id === user.id).length;
-    //     recordCounts[user.id] = recordCount;
-    // });
+
+    const recordCount = records.length;
+
 
     // const topUserId = Object.keys(recordCounts).reduce((a, b) => recordCounts[a] > recordCounts[b] ? a : b);
 
@@ -62,11 +61,22 @@ export const Home = () => {
                                     <Box sx={{ mb: 3 }}>
                                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                             <CardContent sx={{ flexGrow: 1 }}>
-                                                <Typography variant="h4" gutterBottom>
+                                                <Typography variant="h5" gutterBottom>
                                                     Ready to get started?
                                                 </Typography>
                                                 <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    Head over to 'Records' to begin.
+                                                    <Link to="/records">
+                                                        Head over to your 'Records' to begin.
+                                                    </Link>
+                                                </Typography>
+                                            </CardContent>
+                                        </Card> <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                            <CardContent sx={{ flexGrow: 1 }}>
+                                                <Typography variant="h5" gutterBottom>
+                                                    Total number of records in collection:
+                                                </Typography>
+                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
+                                                    {recordCount}
                                                 </Typography>
                                             </CardContent>
                                         </Card>
