@@ -1,11 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Box, Card, CardContent, Grid, Container, Typography } from '@mui/material';
+import { CssBaseline, Box, Card, CardContent, Grid, Container, Typography, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import WelcomeRC from '../Assets/welcomerc.png'
 import SideNav from '../Utils/SideNav';
+import RecordMini from '../Assets/vinyl.png';
 
 const theme = createTheme();
 
@@ -59,23 +60,34 @@ export const Home = () => {
                             <Grid item xs={12}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                     <Box sx={{ mb: 3 }}>
+                                        <Box sx={{ mb: 3 }}>
+                                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                <CardContent sx={{ flexGrow: 1 }}>
+                                                    <Typography variant="h6" gutterBottom>
+                                                        View your Records to begin
+                                                    </Typography>
+                                                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
+                                                        <Link to="/records" style={{ textDecoration: 'none' }}>
+                                                            <IconButton sx={{ p: 1 }}>
+                                                                <img src={RecordMini} alt="View Records" style={{ width: '54px', height: '54px' }} />
+                                                            </IconButton>
+                                                        </Link>
+                                                        <Typography variant="body1" sx={{ ml: 1 }}>
+                                                            Records
+                                                        </Typography>
+
+                                                    </Box>
+                                                </CardContent>
+                                            </Card>
+                                        </Box>
+
+
                                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <Typography variant="h5" gutterBottom>
-                                                    Ready to get started?
+                                                    Total Number of Records in Collection
                                                 </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    <Link to="/records">
-                                                        Head over to your 'Records' to begin.
-                                                    </Link>
-                                                </Typography>
-                                            </CardContent>
-                                        </Card> <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                            <CardContent sx={{ flexGrow: 1 }}>
-                                                <Typography variant="h5" gutterBottom>
-                                                    Total number of records in collection:
-                                                </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
+                                                <Typography variant="h3" gutterBottom sx={{ ml: 1 }}>
                                                     {recordCount}
                                                 </Typography>
                                             </CardContent>
