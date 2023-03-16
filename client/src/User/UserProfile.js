@@ -56,7 +56,7 @@ export const UserProfile = () => {
                                             <CardContent sx={{ flexGrow: 1 }}>
                                                 <Box>
                                                     <Typography variant="h3" gutterBottom>
-                                                        Welcome!
+                                                        Welcome, {currentUser.username}!
                                                     </Typography>
                                                 </Box>
                                             </CardContent>

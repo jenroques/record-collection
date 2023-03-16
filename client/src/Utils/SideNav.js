@@ -73,7 +73,7 @@ const SideNav = ({ setIsEdited, isEdited, setShouldFetchArtists, setShouldFetchR
     const dispatch = useDispatch();
     const history = useHistory();
     const currentUser = useSelector((state) => state.user.currentUser)
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [openAddRecord, setOpenAddRecord] = useState(false);
     const [openAddArtist, setOpenAddArtist] = useState(false);
     const [openAddCollection, setOpenAddCollection] = useState(false);

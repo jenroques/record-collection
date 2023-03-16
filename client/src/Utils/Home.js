@@ -62,36 +62,12 @@ export const Home = () => {
                                     <Box sx={{ mb: 3 }}>
                                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                             <CardContent sx={{ flexGrow: 1 }}>
-                                                <Typography variant="h3" gutterBottom>
+                                                <Typography variant="h4" gutterBottom>
                                                     Ready to get started?
                                                 </Typography>
                                                 <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    Add records to your digital collections.
-                                                    View fellow collectors collections.
-                                                    Add artists to the Artist Database.
+                                                    Head over to 'Records' to begin.
                                                 </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    First step: Head over to the Collections page and create your first collection!
-                                                </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    Seconds step: Head to the Records page,add a record and select which collection you want to contain the new record.
-                                                </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 10 }}>
-                                                    You can add the record to it's artist at anytime via the Artist Database.
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
-                                    </Box>
-                                    <Box sx={{ mb: 3 }}>
-                                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                            <CardContent sx={{ flexGrow: 1 }}>
-                                                <br />
-                                                {/* <Typography variant="h4" gutterBottom> Collector Community Stats:  </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> There are currently {totalCollections} total collections </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> There are currently {totalArtists} artists in the Artist Database </Typography>
-                                                <br />
-                                                <Typography variant="h4" gutterBottom> Record Collector's Stats: </Typography>
-                                                <Typography variant="h5" gutterBottom sx={{ ml: 30 }}> Top user, {topUser.username} , currently has the most records added to their collections</Typography> */}
                                             </CardContent>
                                         </Card>
                                     </Box>

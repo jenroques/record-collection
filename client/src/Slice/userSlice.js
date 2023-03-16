@@ -21,6 +21,9 @@ export const userSlice = createSlice({
         setIsCreated: (state, action) => {
             state.isCreated = action.payload;
         },
+        updateCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        },
         createRecord: (state, action) => {
             const newRecord = action.payload.record;
             const updatedRecords = [...state.records, newRecord];
