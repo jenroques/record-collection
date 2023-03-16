@@ -39,6 +39,10 @@ export const Collections = () => {
         }
     }, [currentUser, dispatch, records]);
 
+    const filteredCollections = collections.filter((collection) =>
+        collection.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ).sort((a, b) => a.id - b.id);
+
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
@@ -73,7 +77,7 @@ export const Collections = () => {
                                             </InputAdornment>
                                         ),
                                     }}
-                                    label="Search"
+                                    label="Search by Name"
                                     variant="standard"
                                     value={searchQuery}
                                     fullWidth
@@ -84,7 +88,7 @@ export const Collections = () => {
                     </Container>
                     <Container sx={{ py: 3 }} maxWidth="100%">
                         <Grid container spacing={4}>
-                            {collections.map((collection, index) => (
+                            {filteredCollections.map((collection, index) => (
                                 <Grid item key={index} xs={12} sm={6} md={8} lg={2}>
                                     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <CardContent sx={{ flexGrow: 1 }}>

@@ -69,7 +69,7 @@ export const Artists = () => {
                                             </InputAdornment>
                                         ),
                                     }}
-                                    label="Search"
+                                    label="Search by Name"
                                     variant="standard"
                                     value={searchQuery}
                                     fullWidth

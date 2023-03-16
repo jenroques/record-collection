@@ -25,6 +25,7 @@ export const Records = () => {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [editRecordId, setEditRecordId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const records = useSelector((state) => state.user.records);
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -77,6 +78,9 @@ export const Records = () => {
     };
 
 
+    const filteredRecords = records.filter((record) =>
+        record.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ).sort((a, b) => a.id - b.id);
     return (
         <div>
             <ThemeProvider theme={theme}>
@@ -103,13 +107,28 @@ export const Records = () => {
                                     <Grid item>
                                         <img src={Recs} alt="Logo" width="400" height="150" />
                                     </Grid>
-
+                                    <Grid item xs>
+                                        <TextField
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <SearchIcon />
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                            label="Search by Title"
+                                            variant="standard"
+                                            value={searchQuery}
+                                            fullWidth
+                                            onChange={(event) => setSearchQuery(event.target.value)}
+                                        />
+                                    </Grid>
                                 </Grid>
                             </Container>
                             <Container sx={{ py: 3 }} maxWidth="100%">
 
                                 <Grid container spacing={4}>
-                                    {records
+                                    {filteredRecords
                                         .map((record, index) => (
                                             <Grid item key={index} xs={12} sm={6} md={8} lg={2}>
                                                 <Card
